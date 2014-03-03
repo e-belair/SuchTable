@@ -1,0 +1,31 @@
+{
+    "name" : "Manuscle/ZendTable",
+    "description" : "Module description",
+    "type" : "module",
+    "license" : "BSD-3-Clause",
+    "homepage" : "https://github.com/Manuscle/ZendTable",
+    "keywords" : [
+        "zf2",
+        "module"
+    ],
+    "authors": [{
+        "name": "Emmanuel Belair",
+        "email": "contact@ebelair.fr"
+    }],
+    "minimum-stability" : "dev",
+    "config": {
+        "process-timeout": 5000
+    },
+    "require" : {
+        "php" : ">=5.3.3",
+        "zendframework/zendframework" : "2.*"
+    },
+    "require-dev" : {
+        "phpunit/phpunit" : "*"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "ZendTable\\" : "src/"
+        }
+    }
+}
