@@ -4,3 +4,5 @@ _Short description_
 This module provide tools to generate an Html table from various type of data.
 
 This module is under development and not finished yet.
+
+You can help, contact me on IRC #zftalk.dev channel
