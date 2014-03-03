@@ -1,5 +1,5 @@
 {
-    "name" : "Manuscle/zend-table",
+    "name" : "manuscle/zend-table",
     "description" : "Module description",
     "type" : "module",
     "license" : "BSD-3-Clause",
