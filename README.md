@@ -10,63 +10,63 @@ You can help, contact me on IRC #zftalk.dev channel or #zftalk-fr
 
 ## Installation
 
-    ```bash
-    ./composer.phar require manuscle/zend-table
-    #when asked for version, type "dev-master"
-    ```
+```bash
+./composer.phar require manuscle/zend-table
+#when asked for version, type "dev-master"
+```
 
 Enable the module into application.config.php
 
-    ```php
-    return array(
-        'modules' => array(
-            'ZendTable',
-            'Application',
-            /** ../.. **/
-        ),
-    );
+```php
+return array(
+    'modules' => array(
+        'ZendTable',
+        'Application',
+        /** ../.. **/
+    ),
+);
     ```
 
 ## Example
 
 Into a controller or whenever you want:
 
-    ```php
-    public function indexAction()
-    {
-        $table = new Table('product-list');
+```php
+public function indexAction()
+{
+    $table = new Table('product-list');
 
-        $table->add([
-            'name' => 'id',
-            'type' => 'ZendTable\Element\Text',
-            'options' => [
-                'label' => 'Identifiant'
-            ]
-        ]);
+    $table->add([
+        'name' => 'id',
+        'type' => 'ZendTable\Element\Text',
+        'options' => [
+            'label' => 'Identifiant'
+        ]
+    ]);
 
-        $table->add([
-            'name' => 'designation',
-            'type' => 'ZendTable\Element\Text',
-            'options' => [
-                'label' => 'Désignation'
-            ]
-        ]);
+    $table->add([
+        'name' => 'designation',
+        'type' => 'ZendTable\Element\Text',
+        'options' => [
+            'label' => 'Désignation'
+        ]
+    ]);
 
-        $table->setData([
-            ['id' => 1, 'designation' => 'Fender stratocaster vintage'],
-            ['id' => 2, 'designation' => 'Ibanez Path Metheny'],
-        ]);
+    $table->setData([
+        ['id' => 1, 'designation' => 'Fender stratocaster vintage'],
+        ['id' => 2, 'designation' => 'Ibanez Path Metheny'],
+    ]);
 
-        return new ViewModel([
-            'table' => $table
-        ]);
-    }
-    ```
+    return new ViewModel([
+        'table' => $table
+    ]);
+}
+```
 
 From the view
 
-    ```php
-    echo $this->table($this->table);
-    ```
+```php
+echo $this->table($this->table);
+```
 
 
