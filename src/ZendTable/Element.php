@@ -9,6 +9,8 @@
 namespace ZendTable;
 
 
+use Zend\Stdlib\ArrayUtils;
+
 class Element implements ElementInterface
 {
     /**
@@ -28,7 +30,7 @@ class Element implements ElementInterface
      *
      * @var array
      */
-    protected $labelAttributes;
+    protected $labelAttributes = array();
 
     /**
      * TD Content
@@ -224,7 +226,7 @@ class Element implements ElementInterface
      *
      * @return Element
      */
-    public function setLabelAttributes($labelAttributes)
+    public function setLabelAttributes(array $labelAttributes)
     {
         $this->labelAttributes = $labelAttributes;
         return $this;
@@ -258,13 +260,30 @@ class Element implements ElementInterface
     }
 
     /**
-     * @param array $options
-     *
-     * @return Element
+     * @param $options
+     * @return $this|ElementInterface
+     * @throws Exception\InvalidArgumentException
      */
     public function setOptions($options)
     {
+        if ($options instanceof \Traversable) {
+            $options = ArrayUtils::iteratorToArray($options);
+        } elseif (!is_array($options)) {
+            throw new Exception\InvalidArgumentException(
+                'The options parameter must be an array or a Traversable'
+            );
+        }
+
+        if (isset($options['label'])) {
+            $this->setLabel($options['label']);
+        }
+
+        if (isset($options['label_attributes'])) {
+            $this->setLabelAttributes($options['label_attributes']);
+        }
+
         $this->options = $options;
+
         return $this;
     }
 
@@ -288,6 +307,8 @@ class Element implements ElementInterface
     }
 
     /**
+     * Return formatted value
+     *
      * @return mixed
      */
     public function getValue()

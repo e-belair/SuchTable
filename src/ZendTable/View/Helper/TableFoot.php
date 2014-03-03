@@ -11,5 +11,5 @@ namespace ZendTable\View\Helper;
 
 class TableFoot extends TableRowGroup
 {
-
+    protected $tag = 'tfoot';
 }

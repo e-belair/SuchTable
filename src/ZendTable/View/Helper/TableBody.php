@@ -11,5 +11,5 @@ namespace ZendTable\View\Helper;
 
 class TableBody extends TableRowGroup
 {
-
+    protected $tag = 'tbody';
 }

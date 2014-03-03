@@ -28,9 +28,7 @@ class TableHeaderCell extends AbstractHelper
      */
     public function render(ElementInterface $element)
     {
-        $value = $element->getValue();
-
-        return $this->openTag($element) . $value . $this->closeTag();
+        return $this->openTag($element) . $element->getLabel() . $this->closeTag();
     }
 
     /**

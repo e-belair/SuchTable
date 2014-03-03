@@ -23,9 +23,9 @@ abstract class TableRowGroup extends AbstractHelper
     protected $tag = '';
 
     protected $validTags = array(
-        'thead',
-        'tbody',
-        'tfoot'
+        'thead' => true,
+        'tbody' => true,
+        'tfoot' => true
     );
 
     /**
@@ -56,8 +56,22 @@ abstract class TableRowGroup extends AbstractHelper
     {
         $content = '';
 
-        $content .= $this->getView()->tableRow($this->tag, $table);
 
+        switch ($this->tag) {
+            case 'thead':
+                $content .= $this->getView()->tr($this->tag, $table);
+                break;
+            case 'tbody':
+                foreach ($table->getData() as $index => $rowData) {
+                    $content .= $this->getView()->tr($this->tag, $table, $rowData);
+                }
+                break;
+            case 'tfoot':
+                //@todo implment tfoot
+                break;
+            default:
+                throw new InvalidArgumentException("Invalid rowGroup provided");
+        }
         if ($content) {
             return $this->openTag() . $content . $this->closeTag();
         }

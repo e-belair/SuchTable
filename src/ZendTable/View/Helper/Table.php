@@ -26,9 +26,10 @@ class Table extends AbstractHelper
     {
         $tableContent = '';
 
-        $tableContent .= $this->getView()->tableHead();
+        $tableContent .= $this->getView()->thead($table)
+                       . $this->getView()->tbody($table);
 
-        return $tableContent;
+        return $this->openTag($table) . $tableContent . $this->closeTag();
     }
 
     /**
@@ -37,7 +38,12 @@ class Table extends AbstractHelper
      */
     public function openTag(TableInterface $table)
     {
-        $tag = sprintf('<table%s>', $this->createAttributesString($table->getAttributes()));
+        $attributes = $table->getAttributes();
+        if (!array_key_exists('id', $attributes)) {
+            $attributes['id'] = $table->getName();
+        }
+
+        $tag = sprintf('<table %s>', $this->createAttributesString($attributes));
 
         return $tag;
     }

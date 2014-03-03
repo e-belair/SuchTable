@@ -38,23 +38,34 @@ class Factory
      */
     public function getTableElementManager()
     {
+        if (null === $this->tableElementManager) {
+            $this->setTableElementManager(new TableElementManager());
+        }
+
         return $this->tableElementManager;
     }
 
     /**
-     * @param $spec
+     * @param array|\Traversable $spec
      * @return ElementInterface
+     * @throws Exception\DomainException
      */
     public function create($spec)
     {
-        $type = isset($spec['type']) ? $spec['type'] : 'ZendTable\Element\Text';
+        $type = isset($spec['type']) ? $spec['type'] : 'ZendTable\Element';
         $element = $this->getTableElementManager()->get($type);
 
         if ($element instanceof ElementInterface) {
-            $this->configureElement($element, $spec);
+            return $this->configureElement($element, $spec);
         }
 
-        return $element;
+        throw new Exception\DomainException(sprintf(
+            '%s expects the $spec["type"] to implement one of %s, %s, or %s; received %s',
+            __METHOD__,
+            'ZendTable\Element\ElementInterface',
+            'ZendTable\TableInterface',
+            $type
+        ));
     }
 
     public function configureElement(ElementInterface $element, $spec)

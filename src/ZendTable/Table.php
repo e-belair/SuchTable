@@ -15,7 +15,7 @@ use Zend\Stdlib\PriorityQueue;
 class Table extends Element implements TableInterface
 {
     protected $attributes = array(
-        'class' => 'table'
+        'class' => 'table table-bordered'
     );
 
     /**
@@ -44,9 +44,8 @@ class Table extends Element implements TableInterface
      */
     public function __construct($name = null, $options = array())
     {
-        parent::__construct($name, $options);
-
         $this->iterator = new PriorityQueue();
+        parent::__construct($name, $options);
     }
 
     /**
@@ -92,7 +91,7 @@ class Table extends Element implements TableInterface
     }
 
     /**
-     * @param \Traversable|ElementInterface $element
+     * @param array|\Traversable|ElementInterface $element
      * @param array $flags
      * @return $this|TableInterface
      * @throws Exception\InvalidArgumentException
@@ -109,7 +108,7 @@ class Table extends Element implements TableInterface
 
         if (!$element instanceof ElementInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
-                '%s requires that $elementOrFieldset be an object implementing %s; received "%s"',
+                '%s requires that $element be an object implementing %s; received "%s"',
                 __METHOD__,
                 __NAMESPACE__ . '\ElementInterface',
                 (is_object($element) ? get_class($element) : gettype($element))
@@ -129,7 +128,7 @@ class Table extends Element implements TableInterface
         if (array_key_exists('name', $flags) && $flags['name'] !== '') {
             $name = $flags['name'];
 
-            // Rename the element or fieldset to the specified alias
+            // Rename the element to the specified alias
             $element->setName($name);
         }
         $order = 0;
@@ -143,7 +142,11 @@ class Table extends Element implements TableInterface
         return $this;
     }
 
-
+    /**
+     * @param string $element
+     * @return ElementInterface
+     * @throws Exception\InvalidElementException
+     */
     public function get($element)
     {
         if (!$this->has($element)) {
@@ -188,5 +191,27 @@ class Table extends Element implements TableInterface
     public function getElements()
     {
         return $this->elements;
+    }
+
+    /**
+     * @todo check $data
+     *
+     * @param array|\ArrayAccess|\Traversable $data
+     * @return Element|ElementInterface
+     * @throws Exception\InvalidArgumentException
+     */
+    public function setData($data)
+    {
+        if (!is_array($data) && !$data instanceof \Traversable) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects an array or Traversable set of data; received "%s"',
+                __METHOD__,
+                (is_object($data) ? get_class($data) : gettype($data))
+            ));
+        }
+
+        $this->data = $data;
+
+        return $this;
     }
 }

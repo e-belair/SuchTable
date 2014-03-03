@@ -112,7 +112,7 @@ interface ElementInterface
      * @param array $labelAttributes
      * @return ElementInterface
      */
-    public function setLabelAttributes($labelAttributes);
+    public function setLabelAttributes(array $labelAttributes);
 
     /**
      * @return array

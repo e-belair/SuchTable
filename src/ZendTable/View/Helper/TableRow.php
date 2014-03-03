@@ -15,41 +15,44 @@ use ZendTable\TableInterface;
 
 class TableRow extends AbstractHelper
 {
-    protected $rowGroup;
-
-    public function __invoke($rowGroup = 'tbody', TableInterface $table = null)
+    public function __invoke($rowGroup = 'tbody', TableInterface $table = null, $rowData = null)
     {
-        $this->rowGroup = $rowGroup;
-
         if (!$table) {
             return $this;
         }
 
+        $content = '';
         switch ($rowGroup) {
             case 'thead':
-                $helper = $this->getView()->tableHeaderCell();
+                $helper = $this->getView()->plugin('th');
+                /** @var ElementInterface $element */
+                foreach ($table as $element) {
+                    $content .= $helper->render($element);
+                }
                 break;
             case 'tbody':
+                $helper = $this->getView()->plugin('td');
+                foreach ($rowData as $name => $data) {
+                    if (!$table->has($name)) {
+                        continue;
+                    }
+
+                    $element = $table->get($name)->setData($data);
+                    $content .= $helper->render($element);
+                }
+                break;
             case 'tfoot':
-                $helper = $this->getView()->tableCell();
+                // @todo implement tfoot
                 break;
             default:
                 throw new InvalidArgumentException("Invalid rowGroup provided");
         }
 
-        $content = '';
-        /** @var ElementInterface $element */
-        foreach ($table as $element) {
-            if ($element->getOption('rowGroup') == $rowGroup) {
-                $content .= $helper->render($element);
-            }
-        }
-
-        return $content;
+        return $this->openTag($table) . $content . $this->closeTag();
     }
 
     /**
-     * @todo sttributes
+     * @todo attributes ?
      *
      * @param TableInterface $table
      * @return string
