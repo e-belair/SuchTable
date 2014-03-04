@@ -1,5 +1,5 @@
 # ZendTable
-_Short description_
+[![Latest Unstable Version](https://poser.pugx.org/manuscle/zend-table/v/unstable.png)](//packagist.org/packages/manuscle/zend-table)
 
 This module provide tools to generate an Html table from various type of data.
 
