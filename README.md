@@ -54,7 +54,9 @@ public function indexAction()
 
     $table->setData([
         ['id' => 1, 'designation' => 'Fender stratocaster vintage'],
-        ['id' => 2, 'designation' => 'Ibanez Path Metheny'],
+        ['id' => 2, 'designation' => 'Ibanez Pat Metheny'],
+        ['id' => 3, 'designation' => 'Gibson Les Paul'],
+        ['id' => 4, 'designation' => 'Music Man Luke'],
     ]);
 
     return new ViewModel([
