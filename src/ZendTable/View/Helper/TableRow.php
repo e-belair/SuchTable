@@ -15,6 +15,15 @@ use ZendTable\TableInterface;
 
 class TableRow extends AbstractHelper
 {
+    /**
+     * @todo setData should be made into a prepare data or populate inside table
+     *
+     * @param string $rowGroup
+     * @param TableInterface $table
+     * @param null $rowData
+     * @return $this|string
+     * @throws \ZendTable\Exception\InvalidArgumentException
+     */
     public function __invoke($rowGroup = 'tbody', TableInterface $table = null, $rowData = null)
     {
         if (!$table) {
@@ -32,12 +41,15 @@ class TableRow extends AbstractHelper
                 break;
             case 'tbody':
                 $helper = $this->getView()->plugin('td');
-                foreach ($rowData as $name => $data) {
-                    if (!$table->has($name)) {
-                        continue;
+                /** @var ElementInterface $element */
+                foreach ($table as $element) {
+
+                    $element->setTable($table)->setRowData($rowData);
+
+                    if (isset($rowData[$element->getName()])) {
+                        $element->setData($rowData[$element->getName()]);
                     }
 
-                    $element = $table->get($name)->setData($data);
                     $content .= $helper->render($element);
                 }
                 break;

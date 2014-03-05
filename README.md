@@ -52,11 +52,31 @@ public function indexAction()
         ]
     ]);
 
+    $table->add([
+        'name' => 'link',
+        'type' => 'ZendTable\Element\Link',
+        'options' => [
+            'innerHtml' => function (Link $element) {
+                $text = 'Add to cart';
+                if ($element->getRowData()['stock'] < 6) {
+                    $text .= ' ('.$element->getRowData()['stock'] . ' in stock!)';
+                }
+                return $text;
+            }
+        ],
+        'attributes' => [
+            'href' => function (Link $element) {
+                return '#?id=' . $element->getRowData()['id'];
+            },
+            'class' => 'btn btn-primary'
+        ]
+    ]);
+
     $table->setData([
-        ['id' => 1, 'designation' => 'Fender stratocaster vintage'],
-        ['id' => 2, 'designation' => 'Ibanez Pat Metheny'],
-        ['id' => 3, 'designation' => 'Gibson Les Paul'],
-        ['id' => 4, 'designation' => 'Music Man Luke'],
+        ['id' => 1, 'designation' => 'Fender stratocaster vintage', 'stock' => 5],
+        ['id' => 2, 'designation' => 'Ibanez Pat Metheny', 'stock' => 10],
+        ['id' => 3, 'designation' => 'Gibson Les Paul', 'stock' => 15],
+        ['id' => 4, 'designation' => 'Music Man Luke', 'stock' => 2],
     ]);
 
     return new ViewModel([

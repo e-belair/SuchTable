@@ -16,6 +16,11 @@ class Element implements ElementInterface
     /**
      * @var string
      */
+    protected $type = 'text';
+
+    /**
+     * @var string
+     */
     protected $name;
 
     /**
@@ -54,6 +59,16 @@ class Element implements ElementInterface
     protected $data;
 
     /**
+     * @var TableInterface
+     */
+    protected $table;
+
+    /**
+     * @var array|\Traversable
+     */
+    protected $rowData;
+
+    /**
      * @var array
      */
     protected $options = array();
@@ -71,6 +86,25 @@ class Element implements ElementInterface
         if (!empty($options)) {
             $this->setOptions($options);
         }
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return Element
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -200,6 +234,42 @@ class Element implements ElementInterface
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * @param $rowData
+     * @return ElementInterface
+     */
+    public function setRowData($rowData)
+    {
+        $this->rowData = $rowData;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRowData()
+    {
+        return $this->rowData;
+    }
+
+    /**
+     * @param TableInterface $table
+     * @return ElementInterface
+     */
+    public function setTable(TableInterface $table)
+    {
+        $this->table = $table;
+        return $this;
+    }
+
+    /**
+     * @return TableInterface
+     */
+    public function getTable()
+    {
+        return $this->table;
     }
 
     /**

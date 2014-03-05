@@ -28,8 +28,10 @@ class TableCell extends AbstractHelper
      */
     public function render(ElementInterface $element)
     {
-        //@todo get element helper
-        return $this->openTag($element) . $element->getValue() . $this->closeTag();
+        $type = $element->getType();
+        $helperType = 'table' . ucfirst(strtolower($type));
+        $helper = $this->getView()->plugin($helperType);
+        return $this->openTag($element) . $helper->__invoke($element) . $this->closeTag();
     }
 
     /**
@@ -38,7 +40,7 @@ class TableCell extends AbstractHelper
      */
     public function openTag(ElementInterface $element)
     {
-        return sprintf('<td %s>', $this->createAttributesString($element->getAttributes()));
+        return '<td>';
     }
 
     /**
