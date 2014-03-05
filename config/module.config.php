@@ -10,6 +10,10 @@ return array(
             'tr'    => 'ZendTable\View\Helper\TableRow',
             'th'    => 'ZendTable\View\Helper\TableHeaderCell',
             'td'    => 'ZendTable\View\Helper\TableCell',
+
+            // Content helpers
+            'tableText'    => 'ZendTable\View\Helper\TableText',
+            'tableLink'    => 'ZendTable\View\Helper\TableLink',
         )
     )
 );

@@ -12,6 +12,17 @@ namespace ZendTable;
 interface ElementInterface
 {
     /**
+     * @param $type
+     * @return mixed
+     */
+    public function setType($type);
+
+    /**
+     * @return string
+     */
+    public function getType();
+
+    /**
      * @param $name
      * @return ElementInterface
      */
@@ -129,4 +140,26 @@ interface ElementInterface
      * @return mixed
      */
     public function getData();
+
+    /**
+     * @param $rowData
+     * @return ElementInterface
+     */
+    public function setRowData($rowData);
+
+    /**
+     * @return mixed
+     */
+    public function getRowData();
+
+    /**
+     * @param TableInterface $table
+     * @return ElementInterface
+     */
+    public function setTable(TableInterface $table);
+
+    /**
+     * @return TableInterface
+     */
+    public function getTable();
 }
