@@ -1,5 +1,5 @@
-# ZendTable
-[![Latest Unstable Version](https://poser.pugx.org/manuscle/zend-table/v/unstable.png)](//packagist.org/packages/manuscle/zend-table)
+# SuchTable
+[![Latest Unstable Version](https://poser.pugx.org/manuscle/such-table/v/unstable.png)](//packagist.org/packages/manuscle/such-table)
 
 This module provide tools to generate an Html table from various type of data.
 
@@ -11,7 +11,7 @@ You can help, contact me on IRC #zftalk.dev channel or #zftalk-fr
 ## Installation
 
 ```bash
-./composer.phar require manuscle/zend-table
+./composer.phar require manuscle/such-table
 #when asked for version, type "dev-master"
 ```
 
@@ -20,7 +20,7 @@ Enable the module into application.config.php
 ```php
 return array(
     'modules' => array(
-        'ZendTable',
+        'SuchTable',
         'Application',
         /** ../.. **/
     ),
@@ -38,7 +38,7 @@ public function indexAction()
 
     $table->add([
         'name' => 'id',
-        'type' => 'ZendTable\Element\Text',
+        'type' => 'SuchTable\Element\Text',
         'options' => [
             'label' => 'Identifiant'
         ]
@@ -46,7 +46,7 @@ public function indexAction()
 
     $table->add([
         'name' => 'designation',
-        'type' => 'ZendTable\Element\Text',
+        'type' => 'SuchTable\Element\Text',
         'options' => [
             'label' => 'Désignation'
         ]
@@ -54,7 +54,7 @@ public function indexAction()
 
     $table->add([
         'name' => 'link',
-        'type' => 'ZendTable\Element\Link',
+        'type' => 'SuchTable\Element\Link',
         'options' => [
             'innerHtml' => function (Link $element) {
                 $text = 'Add to cart';
