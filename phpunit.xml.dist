@@ -11,8 +11,8 @@
         backupGlobals="false"
         syntaxCheck="true"
         >
-    <testsuite name="ZendTable tests">
-        <directory>./tests/ZendTableTest</directory>
+    <testsuite name="SuchTable tests">
+        <directory>./tests/SuchTableTest</directory>
     </testsuite>
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">

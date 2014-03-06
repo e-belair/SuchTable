@@ -3,17 +3,17 @@
 return array(
     'view_helpers' => array(
         'invokables' => array(
-            'table' => 'ZendTable\View\Helper\Table',
-            'thead' => 'ZendTable\View\Helper\TableHead',
-            'tbody' => 'ZendTable\View\Helper\TableBody',
-            'tfoot' => 'ZendTable\View\Helper\TableFoot',
-            'tr'    => 'ZendTable\View\Helper\TableRow',
-            'th'    => 'ZendTable\View\Helper\TableHeaderCell',
-            'td'    => 'ZendTable\View\Helper\TableCell',
+            'table' => 'SuchTable\View\Helper\Table',
+            'thead' => 'SuchTable\View\Helper\TableHead',
+            'tbody' => 'SuchTable\View\Helper\TableBody',
+            'tfoot' => 'SuchTable\View\Helper\TableFoot',
+            'tr'    => 'SuchTable\View\Helper\TableRow',
+            'th'    => 'SuchTable\View\Helper\TableHeaderCell',
+            'td'    => 'SuchTable\View\Helper\TableCell',
 
             // Content helpers
-            'tableText'    => 'ZendTable\View\Helper\TableText',
-            'tableLink'    => 'ZendTable\View\Helper\TableLink',
+            'tableText'    => 'SuchTable\View\Helper\TableText',
+            'tableLink'    => 'SuchTable\View\Helper\TableLink',
         )
     )
 );

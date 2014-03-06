@@ -3,7 +3,7 @@
     "description" : "Module description",
     "type" : "module",
     "license" : "BSD-3-Clause",
-    "homepage" : "https://github.com/Manuscle/ZendTable",
+    "homepage" : "https://github.com/Manuscle/SuchTable",
     "keywords" : [
         "zf2",
         "module"
@@ -25,7 +25,7 @@
     },
     "autoload" : {
         "psr-0" : {
-            "ZendTable\\" : "src/"
+            "SuchTable\\" : "src/"
         }
     }
 }
