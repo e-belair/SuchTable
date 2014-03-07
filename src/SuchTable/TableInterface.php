@@ -15,6 +15,17 @@ interface TableInterface extends
     \IteratorAggregate
 {
     /**
+     * @param Factory $factory
+     * @return TableInterface
+     */
+    public function setTableFactory(Factory $factory);
+
+    /**
+     * @return Factory
+     */
+    public function getTableFactory();
+
+    /**
      * @param \Traversable|ElementInterface $element
      * @param array                         $flags
      * @return TableInterface
@@ -66,4 +77,11 @@ interface TableInterface extends
      * @return array
      */
     public function getRows();
+
+    /**
+     * Prepare and populate the table with rows & elements
+     *
+     * @return BaseElement
+     */
+    public function prepare();
 }
