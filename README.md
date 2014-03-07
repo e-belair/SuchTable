@@ -57,6 +57,24 @@ public function indexAction()
     ]);
 
     $table->add([
+        'name' => 'attributes',
+        'type' => 'SuchTable\Element\DescriptionList',
+        'options' => [
+            // Key or property for the dt tag
+            'dtGetter' => 'name',
+            // Key or property for the dd tag
+            'ddGetter' => 'value',
+            // the string will be added at the end of dt tag content (optional)
+            'separator' => ' :',
+            'label' => 'Attributes'
+        ],
+        'attributes' => [
+            'class' => 'dl-horizontal',
+            'style' => 'margin:0;'
+        ]
+    ]);
+
+    $table->add([
         'name' => 'link',
         'type' => 'SuchTable\Element\Link',
         'options' => [
@@ -77,14 +95,17 @@ public function indexAction()
     ]);
 
     $table->setData([
-        ['id' => 1, 'designation' => 'Fender stratocaster vintage', 'stock' => 5],
+        [
+            'id' => 1, 'designation' => 'Fender stratocaster vintage', 'stock' => 5,
+            'attributes' => [
+                ['id' => 1, 'name' => 'Color', 'value' => 'sunburst'],
+                ['id' => 2, 'name' => 'Body Material', 'value' => 'Alder'],
+                ['id' => 3, 'name' => 'Neck Finish', 'value' => 'Fender Flash Coat Lacquer'],
+            ]
+        ],
         ['id' => 2, 'designation' => 'Ibanez Pat Metheny', 'stock' => 10],
         ['id' => 3, 'designation' => 'Gibson Les Paul', 'stock' => 15],
         ['id' => 4, 'designation' => 'Music Man Luke', 'stock' => 2],
-    ]);
-
-    return new ViewModel([
-        'table' => $table
     ]);
 }
 ```

@@ -14,6 +14,7 @@ return array(
             // Content helpers
             'tableText'    => 'SuchTable\View\Helper\TableText',
             'tableLink'    => 'SuchTable\View\Helper\TableLink',
+            'tableDescriptionList'    => 'SuchTable\View\Helper\TableDescriptionList',
         )
     )
 );
