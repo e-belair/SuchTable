@@ -12,6 +12,12 @@ namespace SuchTable;
 interface ElementInterface
 {
     /**
+     * @return ElementInterface
+     * @throws Exception\InvalidElementException
+     */
+    public function prepare();
+
+    /**
      * @param $type
      * @return mixed
      */
@@ -49,6 +55,13 @@ interface ElementInterface
      * @return mixed
      */
     public function getOption($option);
+
+    /**
+     * @param $option
+     * @param $value
+     * @return mixed
+     */
+    public function setOption($option, $value);
 
     /**
      * @param array|\Traversable $arrayOrTraversable
@@ -129,17 +142,6 @@ interface ElementInterface
      * @return array
      */
     public function getLabelAttributes();
-
-    /**
-     * @param mixed $data
-     * @return ElementInterface
-     */
-    public function setData($data);
-
-    /**
-     * @return mixed
-     */
-    public function getData();
 
     /**
      * @param $rowData

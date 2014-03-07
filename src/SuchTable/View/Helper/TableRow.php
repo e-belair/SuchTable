@@ -11,6 +11,7 @@ namespace SuchTable\View\Helper;
 
 use SuchTable\ElementInterface;
 use SuchTable\Exception\InvalidArgumentException;
+use SuchTable\Exception\InvalidElementException;
 use SuchTable\TableInterface;
 
 class TableRow extends AbstractHelper
@@ -44,11 +45,9 @@ class TableRow extends AbstractHelper
                 /** @var ElementInterface $element */
                 foreach ($table as $element) {
 
-                    $element->setTable($table)->setRowData($rowData);
-
-                    if (isset($rowData[$element->getName()])) {
-                        $element->setData($rowData[$element->getName()]);
-                    }
+                    $element = clone($element);
+                    $element->setTable($table)
+                        ->setRowData($rowData);
 
                     $content .= $helper->render($element);
                 }

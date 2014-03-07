@@ -50,4 +50,15 @@ interface TableInterface extends
      * @return array
      */
     public function getElements();
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    public function setData($data);
+
+    /**
+     * @return mixed
+     */
+    public function getData();
 }
