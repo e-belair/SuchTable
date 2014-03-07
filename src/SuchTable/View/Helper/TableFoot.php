@@ -9,7 +9,7 @@
 namespace SuchTable\View\Helper;
 
 
-class TableFoot extends TableRowGroup
+class TableFoot extends AbstractHelper
 {
     protected $tag = 'tfoot';
 }
