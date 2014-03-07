@@ -10,7 +10,7 @@ TODO: pagination<br />
 TODO: Embed order by<br />
 TODO: Embed Search Form
 
-Want to help? contact me on IRC #zftalk channel or #zftalk-fr
+Want|need help? contact me on IRC #zftalk channel or #zftalk-fr
 
 ## Installation
 
