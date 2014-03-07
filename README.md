@@ -107,6 +107,10 @@ public function indexAction()
         ['id' => 3, 'designation' => 'Gibson Les Paul', 'stock' => 15],
         ['id' => 4, 'designation' => 'Music Man Luke', 'stock' => 2],
     ]);
+
+    return new ViewModel([
+        'table' => $table
+    ]);
 }
 ```
 
@@ -116,4 +120,47 @@ From the view
 echo $this->table($this->table);
 ```
 
+## Same example with doctrine result
 
+Just change the link element to work with object
+
+```php
+    $table->add([
+        'name' => 'link',
+        'type' => 'SuchTable\Element\Link',
+        'options' => [
+            'innerHtml' => function (Link $element) {
+                $text = 'Add to cart';
+                if ($element->getRowData()->getStock() < 6) {
+                    $text .= ' ('.$element->getRowData()->getStock() . ' in stock!)';
+                }
+                return $text;
+            }
+        ],
+        'attributes' => [
+            'href' => function (Link $element) {
+                return '#?id=' . $element->getRowData()->getId();
+            },
+            'class' => function (Link $element) {
+                return 'btn btn-' . ($element->getRowData()->getStock() < 6 ? 'warning' : 'primary') ;
+            },
+            'target' => '_blank'
+        ]
+    ]);
+```
+
+Then make a query like this:
+
+```php
+
+    /** @var EntityManager $em */
+    $em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+    $products = $em->createQueryBuilder()
+        ->select('p', 'a')
+        ->from('Application\Entity\Product', 'p')
+        ->leftJoin('p.attributes', 'a')
+        ->getQuery()
+        ->getResult();
+
+    $table->setData($products);
+```
