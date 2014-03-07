@@ -3,7 +3,7 @@
  * Created by EBelair.
  * User: manu
  * Date: 07/03/14
- * Time: 16:58
+ * Time: 19:20
  */
 
 namespace SuchTable\Element;
@@ -12,10 +12,8 @@ namespace SuchTable\Element;
 use SuchTable\Element;
 use SuchTable\Exception\InvalidArgumentException;
 
-class DescriptionList extends Element
+abstract class AbstractList extends Element
 {
-    protected $type = 'descriptionList';
-
     public function prepare()
     {
         if ($this->isPrepared === true) {
@@ -23,29 +21,23 @@ class DescriptionList extends Element
         }
         parent::prepare();
 
-        $options = $this->getOptions();
-
-        if (!isset($options['dtGetter']) || !isset($options['ddGetter'])) {
+        if (!$getter = $this->getOption('getter')) {
             throw new InvalidArgumentException(
-                sprintf("'dtGetter' or 'ddGetter' options are missing on '%s' element", $this->getName())
+                sprintf("'getter' option is missing on '%s' element", $this->getName())
             );
         }
-
+        $getter = 'get' . ucfirst($getter);
         $content = [];
         if ($value = $this->getValue()) {
             foreach ($value as $line) {
                 if (is_array($line)) {
-                    $dt = $line[$options['dtGetter']];
-                    $dd = $line[$options['ddGetter']];
+                    $li = $value[$getter];
                 } elseif (is_object($line)) {
-                    $dtGetter = 'get' . ucfirst($options['dtGetter']);
-                    $ddGetter = 'get' . ucfirst($options['ddGetter']);
                     try {
-                        $dt = $line->$dtGetter();
-                        $dd = $line->$ddGetter();
+                        $li = $line->$getter();
                     } catch (\Exception $e) {
                         throw new InvalidArgumentException(
-                            sprintf('object has to be accessible with "%s" or "%s" methods', $dtGetter, $ddGetter)
+                            sprintf('object has to be accessible with "%s" method', $getter)
                         );
                     }
                 } else {
@@ -53,10 +45,7 @@ class DescriptionList extends Element
                         sprintf("Invalid type of data, expected array or object found %s", gettype($line))
                     );
                 }
-                if (isset($options['separator'])) {
-                    $dt .= $options['separator'];
-                }
-                $content[] = [$dt => $dd];
+                $content[] = $li;
             }
 
             $this->setValue($content);

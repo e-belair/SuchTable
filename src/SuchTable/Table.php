@@ -39,6 +39,8 @@ class Table extends BaseElement implements TableInterface
     protected $factory;
 
     /**
+     * untouched data
+     *
      * rawData
      *
      * @var array|\Traversable
@@ -46,7 +48,7 @@ class Table extends BaseElement implements TableInterface
     protected $data;
 
     /**
-     * array of raw containing prepared data element
+     * array of rows containing prepared elements
      *
      * @var array
      */
