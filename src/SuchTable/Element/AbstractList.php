@@ -26,13 +26,14 @@ abstract class AbstractList extends Element
                 sprintf("'getter' option is missing on '%s' element", $this->getName())
             );
         }
-        $getter = 'get' . ucfirst($getter);
+
         $content = [];
         if ($value = $this->getValue()) {
             foreach ($value as $line) {
                 if (is_array($line)) {
-                    $li = $value[$getter];
+                    $li = $line[$getter];
                 } elseif (is_object($line)) {
+                    $getter = 'get' . ucfirst($getter);
                     try {
                         $li = $line->$getter();
                     } catch (\Exception $e) {
