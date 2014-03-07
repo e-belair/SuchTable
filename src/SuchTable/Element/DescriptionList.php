@@ -40,14 +40,14 @@ class DescriptionList extends Element
                 } elseif (is_object($line)) {
                     $dtGetter = 'get' . ucfirst($options['dtGetter']);
                     $ddGetter = 'get' . ucfirst($options['ddGetter']);
-                    try {
-                        $dt = $line->$dtGetter();
-                        $dd = $line->$ddGetter();
-                    } catch (\Exception $e) {
+
+                    if (!method_exists($line, $dtGetter) || !method_exists($line, $ddGetter)) {
                         throw new InvalidArgumentException(
                             sprintf('object has to be accessible with "%s" or "%s" methods', $dtGetter, $ddGetter)
                         );
                     }
+                    $dt = $line->$dtGetter();
+                    $dd = $line->$ddGetter();
                 } else {
                     throw new InvalidArgumentException(
                         sprintf("Invalid type of data, expected array or object found %s", gettype($line))
