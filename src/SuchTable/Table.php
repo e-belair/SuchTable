@@ -12,7 +12,7 @@ namespace SuchTable;
 use Zend\Form\FormInterface;
 use Zend\Stdlib\PriorityQueue;
 
-class Table extends Element implements TableInterface
+class Table extends BaseElement implements TableInterface
 {
     protected $attributes = array(
         'class' => 'table table-bordered'
@@ -58,8 +58,8 @@ class Table extends Element implements TableInterface
      */
     public function __construct($name = null, $options = array())
     {
-        $this->iterator = new PriorityQueue();
         parent::__construct($name, $options);
+        $this->iterator = new PriorityQueue();
     }
 
     /**
@@ -107,7 +107,7 @@ class Table extends Element implements TableInterface
     /**
      * @param array|\Traversable|ElementInterface $element
      * @param array $flags
-     * @return $this|TableInterface
+     * @return TableInterface
      * @throws Exception\InvalidArgumentException
      */
     public function add($element, array $flags = array())
@@ -214,7 +214,7 @@ class Table extends Element implements TableInterface
      * @todo check $data
      *
      * @param array|\ArrayAccess|\Traversable $data
-     * @return Element|ElementInterface
+     * @return TableInterface
      * @throws Exception\InvalidArgumentException
      */
     public function setData($data)
@@ -233,7 +233,7 @@ class Table extends Element implements TableInterface
     }
 
     /**
-     * @return mixed
+     * @return array|\Traversable
      */
     public function getData()
     {
@@ -243,7 +243,7 @@ class Table extends Element implements TableInterface
     /**
      * Prepare and populate the table with rows & elements
      *
-     * @return $this|ElementInterface
+     * @return TableInterface
      */
     public function prepare()
     {

@@ -28,6 +28,10 @@ class TableBody extends AbstractHelper
         return $this->render($table);
     }
 
+    /**
+     * @param TableInterface $table
+     * @return string
+     */
     public function render(TableInterface $table)
     {
         /** @var TableRow $tr */
@@ -59,6 +63,9 @@ class TableBody extends AbstractHelper
         return '<tbody>';
     }
 
+    /**
+     * @return string
+     */
     public function closeTag()
     {
         return '</tbody>';

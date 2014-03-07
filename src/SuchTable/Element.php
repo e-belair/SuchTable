@@ -10,19 +10,13 @@ namespace SuchTable;
 
 
 use SuchTable\Exception\InvalidElementException;
-use Zend\Stdlib\ArrayUtils;
 
-class Element implements ElementInterface
+class Element extends BaseElement implements ElementInterface
 {
     /**
      * @var string
      */
     protected $type = 'text';
-
-    /**
-     * @var string
-     */
-    protected $name;
 
     /**
      * TH Content
@@ -46,13 +40,6 @@ class Element implements ElementInterface
     protected $value;
 
     /**
-     * Content Element attributes
-     *
-     * @var array
-     */
-    protected $attributes = array();
-
-    /**
      * @var TableInterface
      */
     protected $table;
@@ -65,28 +52,34 @@ class Element implements ElementInterface
     protected $rowData;
 
     /**
-     * @var array
+     * @param string $key
+     * @param string $value
+     * @return ElementInterface
      */
-    protected $options = array();
-
-    /**
-     * @var bool
-     */
-    protected $isPrepared = false;
-
-    /**
-     * @param null $name
-     * @param array $options
-     */
-    public function __construct($name = null, $options = array())
+    public function setAttribute($key, $value)
     {
-        if (null !== $name) {
-            $this->setName($name);
+        // Do not include the value in the list of attributes
+        if ($key === 'value') {
+            $this->setValue($value);
+            return $this;
+        }
+        $this->attributes[$key] = $value;
+        return $this;
+    }
+
+    public function setOptions($options)
+    {
+        parent::setOptions($options);
+
+        if (isset($options['label'])) {
+            $this->setLabel($options['label']);
         }
 
-        if (!empty($options)) {
-            $this->setOptions($options);
+        if (isset($options['label_attributes'])) {
+            $this->setLabelAttributes($options['label_attributes']);
         }
+
+        return $this;
     }
 
     /**
@@ -108,108 +101,6 @@ class Element implements ElementInterface
         return $this->type;
     }
 
-    /**
-     * @param $option
-     * @return mixed|null
-     */
-    public function getOption($option)
-    {
-        if (!isset($this->options[$option])) {
-            return null;
-        }
-
-        return $this->options[$option];
-    }
-
-    /**
-     * @param string $key
-     * @param string $value
-     * @return ElementInterface
-     */
-    public function setAttribute($key, $value)
-    {
-        // Do not include the value in the list of attributes
-        if ($key === 'value') {
-            $this->setValue($value);
-            return $this;
-        }
-        $this->attributes[$key] = $value;
-        return $this;
-    }
-
-    /**
-     * @param $key
-     * @return null|string
-     */
-    public function getAttribute($key)
-    {
-        if (!array_key_exists($key, $this->attributes)) {
-            return null;
-        }
-        return $this->attributes[$key];
-    }
-
-    /**
-     * @param $key
-     * @return ElementInterface
-     */
-    public function removeAttribute($key)
-    {
-        unset($this->attributes[$key]);
-        return $this;
-    }
-
-    /**
-     * @param array $keys
-     * @return ElementInterface
-     */
-    public function removeAttributes(array $keys)
-    {
-        foreach ($keys as $key) {
-            unset($this->attributes[$key]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return ElementInterface
-     */
-    public function clearAttributes()
-    {
-        $this->attributes = array();
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    public function hasAttribute($key)
-    {
-        return array_key_exists($key, $this->attributes);
-    }
-
-    /**
-     * @param array|\Traversable $arrayOrTraversable
-     * @return $this
-     * @throws Exception\InvalidArgumentException
-     */
-    public function setAttributes($arrayOrTraversable)
-    {
-        if (!is_array($arrayOrTraversable) && !$arrayOrTraversable instanceof \Traversable) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an array or Traversable argument; received "%s"',
-                __METHOD__,
-                (is_object($arrayOrTraversable) ? get_class($arrayOrTraversable) : gettype($arrayOrTraversable))
-            ));
-        }
-        foreach ($arrayOrTraversable as $key => $value) {
-            $this->setAttribute($key, $value);
-        }
-
-        return $this;
-    }
 
     /**
      * @return ElementInterface
@@ -267,14 +158,6 @@ class Element implements ElementInterface
 
         $this->isPrepared = true;
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
     }
 
     /**
@@ -351,74 +234,6 @@ class Element implements ElementInterface
     public function getLabelAttributes()
     {
         return $this->labelAttributes;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return Element
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param $options
-     * @return $this|ElementInterface
-     * @throws Exception\InvalidArgumentException
-     */
-    public function setOptions($options)
-    {
-        if ($options instanceof \Traversable) {
-            $options = ArrayUtils::iteratorToArray($options);
-        } elseif (!is_array($options)) {
-            throw new Exception\InvalidArgumentException(
-                'The options parameter must be an array or a Traversable'
-            );
-        }
-
-        if (isset($options['label'])) {
-            $this->setLabel($options['label']);
-        }
-
-        if (isset($options['label_attributes'])) {
-            $this->setLabelAttributes($options['label_attributes']);
-        }
-
-        $this->options = $options;
-        $this->isPrepared = false;
-
-        return $this;
-    }
-
-    /**
-     * @param $option
-     * @param $value
-     * @return ElementInterface
-     */
-    public function setOption($option, $value)
-    {
-        $this->options[$option] = $value;
-        $this->isPrepared = false;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
     }
 
     /**
