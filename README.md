@@ -10,7 +10,7 @@ TODO: pagination<br />
 TODO: Embed order by<br />
 TODO: Embed Search Form
 
-You can help, contact me on IRC #zftalk.dev channel or #zftalk-fr
+Want to help? contact me on IRC #zftalk channel or #zftalk-fr
 
 ## Installation
 
@@ -122,7 +122,8 @@ echo $this->table($this->table);
 
 ## Same example with doctrine result
 
-Just change the link element to work with object
+Just change the link element to work with object.
+Of course, you can set theses options with a simple string value ;)
 
 ```php
     $table->add([
