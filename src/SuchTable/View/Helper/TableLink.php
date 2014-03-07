@@ -30,25 +30,22 @@ class TableLink extends AbstractHelper
 
     public function render(Link $element)
     {
+        $value = $element->getValue();
         $attributes = $element->getAttributes();
-        if (!isset($attributes['href'])) {
-            throw new InvalidElementException('href attribute has to be set for link element');
+        if (isset($attributes['href'])) {
+            $href = $attributes['href'];
+            unset($attributes['href']);
+        } elseif ($value) {
+            $href = $value;
+        } else {
+            return null;
         }
 
-        if (is_callable($attributes['href'])) {
-            $attributes['href'] = (string) call_user_func($attributes['href'], $element);
-        }
-        $href = $attributes['href'];
-        unset($attributes['href']);
-
-        $innerHTML = $element->getInnerHtml();
-        if (!$innerHTML) {
+        $innerHtml = $element->getOption('innerHtml');
+        if (!$innerHtml) {
             throw new InvalidElementException('innerHtml option has to be set for link element');
         }
-        if (is_callable($innerHTML)) {
-            $innerHTML = (string) call_user_func($innerHTML, $element);
-        }
 
-        return sprintf('<a href="%s" %s>%s</a>', $href, $this->createAttributesString($attributes), $innerHTML);
+        return sprintf('<a href="%s" %s>%s</a>', $href, $this->createAttributesString($attributes), $innerHtml);
     }
 }

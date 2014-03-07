@@ -39,6 +39,11 @@ class Table extends Element implements TableInterface
     protected $factory;
 
     /**
+     * @var array|\Traversable
+     */
+    protected $data;
+
+    /**
      * @param  null|int|string  $name    Optional name for the element
      * @param  array            $options Optional options for the element
      */
@@ -213,5 +218,13 @@ class Table extends Element implements TableInterface
         $this->data = $data;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }

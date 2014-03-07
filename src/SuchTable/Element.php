@@ -9,6 +9,7 @@
 namespace SuchTable;
 
 
+use SuchTable\Exception\InvalidElementException;
 use Zend\Stdlib\ArrayUtils;
 
 class Element implements ElementInterface
@@ -38,25 +39,18 @@ class Element implements ElementInterface
     protected $labelAttributes = array();
 
     /**
-     * TD Content
+     * Modified data
      *
      * @var mixed
      */
     protected $value;
 
     /**
-     * TD Attributes
+     * Content Element attributes
      *
      * @var array
      */
     protected $attributes = array();
-
-    /**
-     * Row data
-     *
-     * @var mixed
-     */
-    protected $data;
 
     /**
      * @var TableInterface
@@ -64,6 +58,8 @@ class Element implements ElementInterface
     protected $table;
 
     /**
+     * Unmodified RowData
+     *
      * @var array|\Traversable
      */
     protected $rowData;
@@ -72,6 +68,11 @@ class Element implements ElementInterface
      * @var array
      */
     protected $options = array();
+
+    /**
+     * @var bool
+     */
+    protected $isPrepared = false;
 
     /**
      * @param null $name
@@ -206,6 +207,65 @@ class Element implements ElementInterface
         foreach ($arrayOrTraversable as $key => $value) {
             $this->setAttribute($key, $value);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return ElementInterface
+     * @throws Exception\InvalidElementException
+     */
+    public function prepare()
+    {
+        if ($this->isPrepared === true) {
+            return $this;
+        }
+
+        foreach ($this->getAttributes() as $name => $attribute) {
+            if (is_callable($attribute)) {
+                $this->setAttribute($name, (string) call_user_func($attribute, $this));
+            }
+        }
+
+        foreach ($this->getOptions() as $option => $value) {
+            if (is_callable($value)) {
+                $this->setOption($option, (string) call_user_func($value, $this));
+            }
+        }
+
+        $rowData = $this->getRowData();
+        if (is_object($rowData)) {
+            $getter = 'get'.ucfirst(strtolower($this->getName()));
+            if (method_exists($rowData, $getter)) {
+                try {
+                    $this->setValue($rowData->$getter());
+                } catch (\Exception $e) {
+                    throw new InvalidElementException(
+                        sprintf('object method "%s" has to be accessible', $getter)
+                    );
+                }
+            } elseif (property_exists($rowData, $this->getName())) {
+                try {
+                    $this->setValue($rowData->{$this->getName()});
+                } catch (\Exception $e) {
+                    throw new InvalidElementException(
+                        sprintf(
+                            'object property "%s" has to be accessible or contain getter like "%s"',
+                            $this->getName(),
+                            $getter
+                        )
+                    );
+                }
+            }
+        } elseif (is_array($rowData)) {
+            if (isset($rowData[$this->getName()])) {
+                $this->setValue($rowData[$this->getName()]);
+            }
+        } else {
+            throw new InvalidElementException('type of data not recognized');
+        }
+
+        $this->isPrepared = true;
         return $this;
     }
 
@@ -218,31 +278,13 @@ class Element implements ElementInterface
     }
 
     /**
-     * @param mixed $data
-     *
-     * @return Element
-     */
-    public function setData($data)
-    {
-        $this->data = $data;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
      * @param $rowData
      * @return ElementInterface
      */
     public function setRowData($rowData)
     {
         $this->rowData = $rowData;
+        $this->isPrepared = false;
         return $this;
     }
 
@@ -261,6 +303,7 @@ class Element implements ElementInterface
     public function setTable(TableInterface $table)
     {
         $this->table = $table;
+        $this->isPrepared = false;
         return $this;
     }
 
@@ -353,7 +396,20 @@ class Element implements ElementInterface
         }
 
         $this->options = $options;
+        $this->isPrepared = false;
 
+        return $this;
+    }
+
+    /**
+     * @param $option
+     * @param $value
+     * @return ElementInterface
+     */
+    public function setOption($option, $value)
+    {
+        $this->options[$option] = $value;
+        $this->isPrepared = false;
         return $this;
     }
 
@@ -383,6 +439,8 @@ class Element implements ElementInterface
      */
     public function getValue()
     {
+        $this->prepare();
+
         return $this->value;
     }
 }

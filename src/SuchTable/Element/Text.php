@@ -13,8 +13,5 @@ use SuchTable\Element;
 
 class Text extends Element
 {
-    public function getValue()
-    {
-        return $this->getData();
-    }
+
 }
