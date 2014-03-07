@@ -29,18 +29,18 @@ abstract class AbstractList extends Element
 
         $content = [];
         if ($value = $this->getValue()) {
+            $getterMethod = 'get' . ucfirst($getter);
+
             foreach ($value as $line) {
                 if (is_array($line)) {
                     $li = $line[$getter];
                 } elseif (is_object($line)) {
-                    $getter = 'get' . ucfirst($getter);
-                    try {
-                        $li = $line->$getter();
-                    } catch (\Exception $e) {
+                    if (!method_exists($line, $getterMethod)) {
                         throw new InvalidArgumentException(
-                            sprintf('object has to be accessible with "%s" method', $getter)
+                            sprintf('object has to be accessible with "%s" method', $getterMethod)
                         );
                     }
+                    $li = $line->$getterMethod();
                 } else {
                     throw new InvalidArgumentException(
                         sprintf("Invalid type of data, expected array or object found %s", gettype($line))
