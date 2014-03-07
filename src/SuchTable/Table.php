@@ -19,7 +19,7 @@ class Table extends Element implements TableInterface
     );
 
     /**
-     * @var array|\Traversable
+     * @var array|\Traversable|ElementInterface[]
      */
     protected $elements = array();
 
@@ -39,9 +39,18 @@ class Table extends Element implements TableInterface
     protected $factory;
 
     /**
+     * rawData
+     *
      * @var array|\Traversable
      */
     protected $data;
+
+    /**
+     * array of raw containing prepared data element
+     *
+     * @var array
+     */
+    protected $rows = array();
 
     /**
      * @param  null|int|string  $name    Optional name for the element
@@ -78,7 +87,7 @@ class Table extends Element implements TableInterface
     /**
      * IteratorAggregate: return internal iterator
      *
-     * @return PriorityQueue
+     * @return PriorityQueue|ElementInterface[]
      */
     public function getIterator()
     {
@@ -193,6 +202,9 @@ class Table extends Element implements TableInterface
         // TODO: Implement setPriority() method.
     }
 
+    /**
+     * @return array|\Traversable|ElementInterface[]
+     */
     public function getElements()
     {
         return $this->elements;
@@ -216,8 +228,8 @@ class Table extends Element implements TableInterface
         }
 
         $this->data = $data;
-
-        return $this;
+        $this->isPrepared = false;
+        return $this->prepare();
     }
 
     /**
@@ -226,5 +238,44 @@ class Table extends Element implements TableInterface
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * Prepare and populate the table with rows & elements
+     *
+     * @return $this|ElementInterface
+     */
+    public function prepare()
+    {
+        if ($this->isPrepared === true) {
+            return $this;
+        }
+
+        $this->rows = [];
+        foreach ($this->getData() as $rowData) {
+            $row = [];
+            /** @var ElementInterface $element */
+            foreach ($this as $element) {
+                $element = clone($element);
+                $element->setTable($this)
+                    ->setRowData($rowData);
+                $row[$element->getName()] = $element;
+            }
+            $this->rows[] = $row;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRows()
+    {
+        if (false === $this->isPrepared) {
+            $this->prepare();
+        }
+
+        return $this->rows;
     }
 }

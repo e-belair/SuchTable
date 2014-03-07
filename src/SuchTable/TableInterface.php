@@ -61,4 +61,9 @@ interface TableInterface extends
      * @return mixed
      */
     public function getData();
+
+    /**
+     * @return array
+     */
+    public function getRows();
 }

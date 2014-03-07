@@ -22,12 +22,20 @@ class Table extends AbstractHelper
         return $this->render($table);
     }
 
+    /**
+     * @todo implement tfoot
+     *
+     * @param TableInterface $table
+     * @return string
+     */
     public function render(TableInterface $table)
     {
-        $tableContent = '';
+        /** @var TableHead $thead */
+        $thead = $this->getView()->plugin('thead');
+        /** @var TableBody $tbody */
+        $tbody = $this->getView()->plugin('tbody');
 
-        $tableContent .= $this->getView()->thead($table)
-                       . $this->getView()->tbody($table);
+        $tableContent = $thead->render($table) . $tbody->render($table);
 
         return $this->openTag($table) . $tableContent . $this->closeTag();
     }
