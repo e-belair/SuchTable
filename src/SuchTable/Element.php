@@ -11,7 +11,7 @@ namespace SuchTable;
 
 use SuchTable\Exception\InvalidElementException;
 
-class Element extends BaseElement implements ElementInterface
+abstract class Element extends BaseElement implements ElementInterface
 {
     /**
      * @var string

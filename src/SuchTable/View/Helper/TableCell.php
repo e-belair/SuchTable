@@ -29,7 +29,7 @@ class TableCell extends AbstractHelper
     public function render(ElementInterface $element)
     {
         $type = $element->getType();
-        $helperType = 'table' . ucfirst(strtolower($type));
+        $helperType = 'table' . ucfirst($type);
         $helper = $this->getView()->plugin($helperType);
         return $this->openTag($element) . $helper->__invoke($element) . $this->closeTag();
     }

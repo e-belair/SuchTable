@@ -20,7 +20,7 @@ class TableLink extends AbstractHelper
         'target' => true,
     );
 
-    public function __invoke(Link $element)
+    public function __invoke(Link $element = null)
     {
         if (!$element) {
             return $this;
