@@ -15,8 +15,9 @@ use SuchTable\Exception\InvalidElementException;
 class TableLink extends AbstractHelper
 {
     protected $validTagAttributes = array(
-        'href'  => true,
-        'title' => true
+        'href'   => true,
+        'title'  => true,
+        'target' => true,
     );
 
     public function __invoke(Link $element)

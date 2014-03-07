@@ -57,6 +57,9 @@ class TableHead extends AbstractHelper
         return '<thead>';
     }
 
+    /**
+     * @return string
+     */
     public function closeTag()
     {
         return '</thead>';

@@ -10,7 +10,7 @@ namespace SuchTable;
 
 
 interface TableInterface extends
-    ElementInterface,
+    BaseInterface,
     \Countable,
     \IteratorAggregate
 {
