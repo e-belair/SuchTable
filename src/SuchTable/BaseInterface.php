@@ -9,7 +9,7 @@
 namespace SuchTable;
 
 
-interface BaseInterface
+interface BaseInterface extends \Countable, \IteratorAggregate
 {
     /**
      * @param $name
@@ -92,4 +92,74 @@ interface BaseInterface
      * @return array
      */
     public function getAttributes();
+
+    /**
+     * @param Factory $factory
+     * @return TableInterface
+     */
+    public function setTableFactory(Factory $factory);
+
+    /**
+     * @return Factory
+     */
+    public function getTableFactory();
+
+    /**
+     * @param \Traversable|ElementInterface $element
+     * @param array                         $flags
+     * @return TableInterface
+     */
+    public function add($element, array $flags = array());
+
+    /**
+     * @param string $element
+     * @return bool
+     */
+    public function has($element);
+
+    /**
+     * @param string $element
+     * @return ElementInterface
+     */
+    public function get($element);
+
+    /**
+     * @param string $element
+     * @return TableInterface
+     */
+    public function remove($element);
+
+    /**
+     * @param $element
+     * @param $priority
+     * @return mixed
+     */
+    public function setPriority($element, $priority);
+
+    /**
+     * @return array
+     */
+    public function getElements();
+
+    /**
+     * @return ElementInterface
+     * @throws Exception\InvalidElementException
+     */
+    public function prepare();
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    public function setData($data);
+
+    /**
+     * @return mixed
+     */
+    public function getData();
+
+    /**
+     * @return array
+     */
+    public function getRows();
 }

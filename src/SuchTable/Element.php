@@ -9,8 +9,6 @@
 namespace SuchTable;
 
 
-use SuchTable\Exception\InvalidElementException;
-
 abstract class Element extends BaseElement implements ElementInterface
 {
     /**
@@ -33,23 +31,14 @@ abstract class Element extends BaseElement implements ElementInterface
     protected $labelAttributes = array();
 
     /**
-     * Modified data
-     *
-     * @var mixed
-     */
-    protected $value;
-
-    /**
      * @var TableInterface
      */
     protected $table;
 
     /**
-     * Unmodified RowData
-     *
-     * @var array|\Traversable
+     * @var BaseElement
      */
-    protected $rowData;
+    protected $parent;
 
     /**
      * @param string $key
@@ -58,11 +47,6 @@ abstract class Element extends BaseElement implements ElementInterface
      */
     public function setAttribute($key, $value)
     {
-        // Do not include the value in the list of attributes
-        if ($key === 'value') {
-            $this->setValue($value);
-            return $this;
-        }
         $this->attributes[$key] = $value;
         return $this;
     }
@@ -99,84 +83,6 @@ abstract class Element extends BaseElement implements ElementInterface
     public function getType()
     {
         return $this->type;
-    }
-
-
-    /**
-     * @return ElementInterface
-     * @throws Exception\InvalidElementException
-     */
-    public function prepare()
-    {
-        if ($this->isPrepared === true) {
-            return $this;
-        }
-
-        foreach ($this->getAttributes() as $name => $attribute) {
-            if (is_callable($attribute)) {
-                $this->setAttribute($name, (string) call_user_func($attribute, $this));
-            }
-        }
-
-        foreach ($this->getOptions() as $option => $value) {
-            if (is_callable($value)) {
-                $this->setOption($option, (string) call_user_func($value, $this));
-            }
-        }
-
-        $rowData = $this->getRowData();
-        if (is_object($rowData)) {
-            $getter = 'get'.ucfirst(strtolower($this->getName()));
-            if (method_exists($rowData, $getter)) {
-                try {
-                    $this->setValue($rowData->$getter());
-                } catch (\Exception $e) {
-                    throw new InvalidElementException(
-                        sprintf('object method "%s" has to be accessible', $getter)
-                    );
-                }
-            } elseif (property_exists($rowData, $this->getName())) {
-                try {
-                    $this->setValue($rowData->{$this->getName()});
-                } catch (\Exception $e) {
-                    throw new InvalidElementException(
-                        sprintf(
-                            'object property "%s" has to be accessible or contain getter like "%s"',
-                            $this->getName(),
-                            $getter
-                        )
-                    );
-                }
-            }
-        } elseif (is_array($rowData)) {
-            if (isset($rowData[$this->getName()])) {
-                $this->setValue($rowData[$this->getName()]);
-            }
-        } else {
-            throw new InvalidElementException('type of data not recognized');
-        }
-
-        $this->isPrepared = true;
-        return $this;
-    }
-
-    /**
-     * @param $rowData
-     * @return ElementInterface
-     */
-    public function setRowData($rowData)
-    {
-        $this->rowData = $rowData;
-        $this->isPrepared = false;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRowData()
-    {
-        return $this->rowData;
     }
 
     /**
@@ -237,25 +143,21 @@ abstract class Element extends BaseElement implements ElementInterface
     }
 
     /**
-     * @param mixed $value
-     *
-     * @return Element
+     * @return BaseElement
      */
-    public function setValue($value)
+    public function getParent()
     {
-        $this->value = $value;
-        return $this;
+        return $this->parent;
     }
 
     /**
-     * Return formatted value
+     * @param BaseElement $parent
      *
-     * @return mixed
+     * @return Element
      */
-    public function getValue()
+    public function setParent($parent)
     {
-        $this->prepare();
-
-        return $this->value;
+        $this->parent = $parent;
+        return $this;
     }
 }

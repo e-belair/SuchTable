@@ -12,12 +12,6 @@ namespace SuchTable;
 interface ElementInterface extends BaseInterface
 {
     /**
-     * @return ElementInterface
-     * @throws Exception\InvalidElementException
-     */
-    public function prepare();
-
-    /**
      * @param $type
      * @return mixed
      */
@@ -27,17 +21,6 @@ interface ElementInterface extends BaseInterface
      * @return string
      */
     public function getType();
-
-    /**
-     * @param mixed $value
-     * @return ElementInterface
-     */
-    public function setValue($value);
-
-    /**
-     * @return mixed
-     */
-    public function getValue();
 
     /**
      * @param mixed $label
@@ -62,17 +45,6 @@ interface ElementInterface extends BaseInterface
     public function getLabelAttributes();
 
     /**
-     * @param $rowData
-     * @return ElementInterface
-     */
-    public function setRowData($rowData);
-
-    /**
-     * @return mixed
-     */
-    public function getRowData();
-
-    /**
      * @param TableInterface $table
      * @return ElementInterface
      */
@@ -82,4 +54,15 @@ interface ElementInterface extends BaseInterface
      * @return TableInterface
      */
     public function getTable();
+
+    /**
+     * @param BaseInterface $parent
+     * @return ElementInterface
+     */
+    public function setParent($parent);
+
+    /**
+     * @return BaseInterface
+     */
+    public function getParent();
 }

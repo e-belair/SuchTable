@@ -15,8 +15,11 @@ return array(
             'tableText'    => 'SuchTable\View\Helper\TableText',
             'tableLink'    => 'SuchTable\View\Helper\TableLink',
             'tableDescriptionList' => 'SuchTable\View\Helper\TableDescriptionList',
+            'tableDescriptionTerm' => 'SuchTable\View\Helper\TableDescriptionTerm',
+            'tableDescriptionDesc' => 'SuchTable\View\Helper\TableDescriptionDesc',
             'tableUnorderedList'   => 'SuchTable\View\Helper\TableUnorderedList',
             'tableOrderedList'     => 'SuchTable\View\Helper\TableOrderedList',
+            'tableListItem'        => 'SuchTable\View\Helper\TableListItem',
         )
     )
 );
