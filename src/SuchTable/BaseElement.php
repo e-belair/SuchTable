@@ -440,7 +440,6 @@ class BaseElement implements BaseInterface
             }
         }
 
-        $table = $this instanceof Element ? $this->getTable(): $this;
         $this->rows = [];
         $datas = $this->getData();
         if (is_array($datas) || $datas instanceof \ArrayAccess) {
@@ -449,11 +448,11 @@ class BaseElement implements BaseInterface
                 /** @var ElementInterface $element */
                 foreach ($this as $element) {
                     $element = clone($element);
-                    $element->setTable($table)->setParent($this);
-                    if ($table instanceof Table) {
-                        $element->setRowData($data);
+                    $element->setParent($this);
+                    if ($this instanceof Table) {
+                        $element->setTable($this)->setRowData($data);
                     } else {
-                        $element->setRowData($element->getParent()->getRowData());
+                        $element->setTable($this->getTable())->setRowData($this->getRowData());
                     }
 
                     if (is_object($data)) {
