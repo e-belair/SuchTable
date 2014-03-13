@@ -444,38 +444,38 @@ class BaseElement implements BaseInterface
         $this->rows = [];
         $datas = $this->getData();
         if (is_array($datas) || $datas instanceof \ArrayAccess) {
-            foreach ($datas as $data) {
+            foreach ($datas as $key => $data) {
                 $row = [];
                 /** @var ElementInterface $element */
                 foreach ($this as $element) {
                     $element = clone($element);
                     $element->setTable($table)->setParent($this);
+                    if ($table instanceof Table) {
+                        $element->setRowData($data);
+                    } else {
+                        $element->setRowData($element->getParent()->getRowData());
+                    }
+
                     if (is_object($data)) {
                         $getter = 'get'.ucfirst(strtolower($element->getName()));
                         if (method_exists($data, $getter)) {
-                            try {
-                                $element->setData($data->$getter());
-                            } catch (\Exception $e) {
-                                throw new InvalidElementException(
-                                    sprintf('object method "%s" has to be accessible', $getter)
-                                );
-                            }
+                            $element->setData($data->$getter());
                         } elseif (property_exists($data, $element->getName())) {
-                            try {
-                                $element->setData($data->{$element->getName()});
-                            } catch (\Exception $e) {
-                                throw new InvalidElementException(
-                                    sprintf(
-                                        'object property "%s" has to be accessible or contain getter like "%s"',
-                                        $element->getName(),
-                                        $getter
-                                    )
-                                );
-                            }
+                            $element->setData($data->{$element->getName()});
                         }
                     } elseif (is_array($data) && !empty($data[$element->getName()])) {
                         $element->setData($data[$element->getName()]);
                     }
+
+                    // Check if element mapped to the content
+                    if ((is_object($element->getData()) || is_array($element->getData())) && $element->count() == 0) {
+                        if ($element->getIterator()->count() == 0) {
+                            throw new InvalidElementException(
+                                sprintf('Missing element for array|object data of element %s', $element->getName())
+                            );
+                        }
+                    }
+
                     $row[$element->getName()] = $element;
                 }
                 $this->rows[] = $row;

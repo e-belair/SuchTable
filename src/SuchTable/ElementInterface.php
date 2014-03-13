@@ -65,4 +65,17 @@ interface ElementInterface extends BaseInterface
      * @return BaseInterface
      */
     public function getParent();
+
+    /**
+     * Table RowData
+     *
+     * @param $data
+     * @return ElementInterface
+     */
+    public function setRowData($data);
+
+    /**
+     * @return mixed
+     */
+    public function getRowData();
 }
