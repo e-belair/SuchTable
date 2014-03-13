@@ -24,6 +24,6 @@ class TableText extends AbstractHelper
 
     public function render(Text $element)
     {
-        return $element->getValue();
+        return $element->getData();
     }
 }

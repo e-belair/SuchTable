@@ -23,6 +23,8 @@ class TableCell extends AbstractHelper
     }
 
     /**
+     * @todo recursive render of childs elements
+     *
      * @param ElementInterface $element
      * @return string
      */

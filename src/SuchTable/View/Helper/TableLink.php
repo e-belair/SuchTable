@@ -31,13 +31,13 @@ class TableLink extends AbstractHelper
 
     public function render(Link $element)
     {
-        $value = $element->getValue();
+        $data = $element->getData();
         $attributes = $element->getAttributes();
         if (isset($attributes['href'])) {
             $href = $attributes['href'];
             unset($attributes['href']);
-        } elseif ($value) {
-            $href = $value;
+        } elseif ($data) {
+            $href = $data;
         } else {
             return null;
         }

@@ -13,8 +13,6 @@ use SuchTable\Element\AbstractList;
 
 abstract class TableAbstractList extends AbstractHelper
 {
-    protected $tag = 'ul';
-
     /**
      * @param AbstractList $element
      * @return $this|string
@@ -34,28 +32,24 @@ abstract class TableAbstractList extends AbstractHelper
      */
     public function render(AbstractList $element)
     {
-        $value = $element->getValue();
-        if (count($value) > 0) {
-            $content = '';
-            foreach ($value as $v) {
-                $content .= "<li>$v</li>";
+        /** @var TableListItem $li */
+        $li = $this->getView()->plugin('tableListItem');
+        $tag = $element->getType() == 'unorderedList' ? 'ul' : 'ol';
+        $content = '';
+        foreach ($element->getRows() as $row) {
+            foreach ($row as $el) {
+                $content .= $li->render($el);
             }
+        }
 
+        if ($content) {
             return sprintf(
                 '<%s %s>%s</%s>',
-                $this->getTag(),
+                $tag,
                 $this->createAttributesString($element->getAttributes()),
                 $content,
-                $this->getTag()
+                $tag
             );
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getTag()
-    {
-        return $this->tag;
     }
 }

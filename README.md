@@ -56,23 +56,19 @@ public function indexAction()
         ]
     ]);
 
-    $table->add([
-        'name' => 'attributes',
-        'type' => 'SuchTable\Element\DescriptionList',
-        'options' => [
-            // Key or property for the dt tag
-            'dtGetter' => 'name',
-            // Key or property for the dd tag
-            'ddGetter' => 'value',
-            // the string will be added at the end of dt tag content (optional)
-            'separator' => ' :',
-            'label' => 'Attributes'
-        ],
-        'attributes' => [
-            'class' => 'dl-horizontal',
-            'style' => 'margin:0;'
-        ]
+    $attrList = new DescriptionList('attributes');
+    $attrList->setAttributes([
+        'class' => 'dl-horizontal',
+        'style' => 'margin:0;'
     ]);
+    $attrList->add(new DescriptionTerm('name'), ['separator' => ' :'])
+        ->add(new DescriptionDesc('value'));
+    $table->add($attrList);
+
+    // OR
+    // $ul = new UnorderedList('attributes');
+    // $ul->add(new ListItem('value'));
+    // $table->add($ul);
 
     $table->add([
         'name' => 'link',

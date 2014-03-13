@@ -9,9 +9,11 @@
 namespace SuchTable;
 
 
+use SuchTable\Exception\InvalidElementException;
 use Zend\Stdlib\ArrayUtils;
+use Zend\Stdlib\PriorityQueue;
 
-class BaseElement
+class BaseElement implements BaseInterface
 {
     /**
      * @var string
@@ -36,6 +38,37 @@ class BaseElement
     protected $isPrepared = false;
 
     /**
+     * @var array|\Traversable|ElementInterface[]
+     */
+    protected $elements = array();
+
+    /**
+     * @var PriorityQueue
+     */
+    protected $iterator;
+
+    /**
+     * @var Factory
+     */
+    protected $factory;
+
+    /**
+     * untouched data
+     *
+     * rawData
+     *
+     * @var array|\Traversable
+     */
+    protected $data;
+
+    /**
+     * array of rows containing prepared elements
+     *
+     * @var array
+     */
+    protected $rows = array();
+
+    /**
      * @param null $name
      * @param array $options
      */
@@ -48,6 +81,8 @@ class BaseElement
         if (!empty($options)) {
             $this->setOptions($options);
         }
+
+        $this->iterator = new PriorityQueue();
     }
 
     /**
@@ -215,4 +250,251 @@ class BaseElement
         return $this;
     }
 
+    /**
+     * @param Factory $factory
+     * @return BaseInterface
+     */
+    public function setTableFactory(Factory $factory)
+    {
+        $this->factory = $factory;
+        return $this;
+    }
+
+    /**
+     * @return Factory
+     */
+    public function getTableFactory()
+    {
+        if (null === $this->factory) {
+            $this->setTableFactory(new Factory());
+        }
+
+        return $this->factory;
+    }
+
+    /**
+     * IteratorAggregate: return internal iterator
+     *
+     * @return PriorityQueue|ElementInterface[]
+     */
+    public function getIterator()
+    {
+        return $this->iterator;
+    }
+
+    /**
+     * Countable: return count of attached elements
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->iterator->count();
+    }
+
+    /**
+     * @param array|\Traversable|ElementInterface $element
+     * @param array $flags
+     * @return BaseElement
+     * @throws Exception\InvalidArgumentException
+     */
+    public function add($element, array $flags = array())
+    {
+        if (is_array($element)
+            || ($element instanceof \Traversable && !$element instanceof ElementInterface)) {
+
+
+            $factory = $this->getTableFactory();
+            $element = $factory->create($element);
+        }
+
+        if (!$element instanceof ElementInterface) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s requires that $element be an object implementing %s; received "%s"',
+                __METHOD__,
+                __NAMESPACE__ . '\ElementInterface',
+                (is_object($element) ? get_class($element) : gettype($element))
+            ));
+        }
+
+        $name = $element->getName();
+        if ((null === $name || '' === $name)
+            && (!array_key_exists('name', $flags) || $flags['name'] === '')
+        ) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s: element provided is not named, and no name provided in flags',
+                __METHOD__
+            ));
+        }
+
+        if (array_key_exists('name', $flags) && $flags['name'] !== '') {
+            $name = $flags['name'];
+
+            // Rename the element to the specified alias
+            $element->setName($name);
+        }
+        $order = 0;
+        if (array_key_exists('priority', $flags)) {
+            $order = $flags['priority'];
+        }
+
+        $this->iterator->insert($element, $order);
+        $this->elements[$name] = $element;
+
+        return $this;
+    }
+
+    /**
+     * @param string $element
+     * @return ElementInterface
+     * @throws Exception\InvalidElementException
+     */
+    public function get($element)
+    {
+        if (!$this->has($element)) {
+            throw new Exception\InvalidElementException(sprintf(
+                "No element by the name of [%s] found in table",
+                $element
+            ));
+        }
+
+        return $this->elements[$element];
+    }
+
+    /**
+     * @param string $element
+     * @return bool
+     */
+    public function has($element)
+    {
+        return array_key_exists($element, $this->elements);
+    }
+
+    /**
+     * @param $element
+     * @return BaseInterface
+     */
+    public function remove($element)
+    {
+        if (!$this->has($element)) {
+            return $this;
+        }
+        $this->iterator->remove($this->elements[$element]);
+        unset($this->elements[$element]);
+
+        return $this;
+    }
+
+    public function setPriority($element, $priority)
+    {
+        // TODO: Implement setPriority() method.
+    }
+
+    /**
+     * @return array|\Traversable|ElementInterface[]
+     */
+    public function getElements()
+    {
+        return $this->elements;
+    }
+
+    /**
+     * @param array|\ArrayAccess|\Traversable $data
+     * @return TableInterface
+     * @throws Exception\InvalidArgumentException
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+        $this->isPrepared = false;
+        return $this->prepare();
+    }
+
+    /**
+     * @return array|\Traversable
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @return BaseElement
+     * @throws Exception\InvalidElementException
+     */
+    public function prepare()
+    {
+        if ($this->isPrepared === true) {
+            return $this;
+        }
+
+        foreach ($this->getAttributes() as $name => $attribute) {
+            if (is_callable($attribute)) {
+                $this->setAttribute($name, (string) call_user_func($attribute, $this));
+            }
+        }
+
+        foreach ($this->getOptions() as $option => $value) {
+            if (is_callable($value)) {
+                $this->setOption($option, (string) call_user_func($value, $this));
+            }
+        }
+
+        $table = $this instanceof Element ? $this->getTable(): $this;
+        $this->rows = [];
+        $datas = $this->getData();
+        if (is_array($datas) || $datas instanceof \ArrayAccess) {
+            foreach ($datas as $data) {
+                $row = [];
+                /** @var ElementInterface $element */
+                foreach ($this as $element) {
+                    $element = clone($element);
+                    $element->setTable($table)->setParent($this);
+                    if (is_object($data)) {
+                        $getter = 'get'.ucfirst(strtolower($element->getName()));
+                        if (method_exists($data, $getter)) {
+                            try {
+                                $element->setData($data->$getter());
+                            } catch (\Exception $e) {
+                                throw new InvalidElementException(
+                                    sprintf('object method "%s" has to be accessible', $getter)
+                                );
+                            }
+                        } elseif (property_exists($data, $element->getName())) {
+                            try {
+                                $element->setData($data->{$element->getName()});
+                            } catch (\Exception $e) {
+                                throw new InvalidElementException(
+                                    sprintf(
+                                        'object property "%s" has to be accessible or contain getter like "%s"',
+                                        $element->getName(),
+                                        $getter
+                                    )
+                                );
+                            }
+                        }
+                    } elseif (is_array($data) && !empty($data[$element->getName()])) {
+                        $element->setData($data[$element->getName()]);
+                    }
+                    $row[$element->getName()] = $element;
+                }
+                $this->rows[] = $row;
+            }
+        }
+
+        $this->isPrepared = true;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRows()
+    {
+        if (false === $this->isPrepared) {
+            $this->prepare();
+        }
+
+        return $this->rows;
+    }
 }

@@ -10,6 +10,7 @@ namespace SuchTable\View\Helper;
 
 
 use SuchTable\Element\DescriptionList;
+use SuchTable\Element;
 
 class TableDescriptionList extends AbstractHelper
 {
@@ -33,15 +34,24 @@ class TableDescriptionList extends AbstractHelper
      */
     public function render(DescriptionList $element)
     {
-        $value = $element->getValue();
-        if (count($value) > 0) {
-            $content = '';
-            foreach ($value as $v) {
-                foreach ($v as $dt => $dd) {
-                    $content .= "<dt>$dt</dt><dd>$dd</dd>";
+        /** @var TableDescriptionTerm $dt */
+        $dt = $this->getView()->plugin('tableDescriptionTerm');
+        /** @var TableDescriptionDesc $dd */
+        $dd = $this->getView()->plugin('tableDescriptionDesc');
+
+        $content = '';
+        foreach ($element->getRows() as $row) {
+            /** @var Element $el */
+            foreach ($row as $el) {
+                if ($el->getType() == 'descriptionTerm') {
+                    $content .= $dt->render($el);
+                } elseif ($el->getType() == 'descriptionDesc') {
+                    $content .= $dd->render($el);
                 }
             }
+        }
 
+        if ($content) {
             return sprintf('<dl %s>%s</dl>', $this->createAttributesString($element->getAttributes()), $content);
         }
     }
