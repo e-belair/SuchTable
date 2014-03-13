@@ -41,6 +41,11 @@ abstract class Element extends BaseElement implements ElementInterface
     protected $parent;
 
     /**
+     * @var mixed
+     */
+    protected $rowData;
+
+    /**
      * @param string $key
      * @param string $value
      * @return ElementInterface
@@ -159,5 +164,24 @@ abstract class Element extends BaseElement implements ElementInterface
     {
         $this->parent = $parent;
         return $this;
+    }
+
+    /**
+     * Table RowData
+     *
+     * @param $data
+     * @return ElementInterface
+     */
+    public function setRowData($data)
+    {
+        $this->rowData = $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRowData()
+    {
+        return $this->rowData;
     }
 }
