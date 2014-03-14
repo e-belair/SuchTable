@@ -8,9 +8,12 @@
 
 namespace SuchTable\View\Helper;
 
+use SuchTable\BaseInterface;
+use SuchTable\ElementInterface;
 use Zend\I18n\View\Helper\AbstractTranslatorHelper as BaseAbstractHelper;
 use Zend\View\Helper\EscapeHtml;
 use Zend\View\Helper\EscapeHtmlAttr;
+use ZendTest\XmlRpc\Server\Exception;
 
 abstract class AbstractHelper extends BaseAbstractHelper
 {
@@ -65,6 +68,45 @@ abstract class AbstractHelper extends BaseAbstractHelper
     protected $validTagAttributes = array(
     );
 
+    /**
+     * Recursive render child elements or content of element
+     *
+     * @param ElementInterface $element
+     * @return int|string
+     */
+    public function getContent(ElementInterface $element)
+    {
+        if (count($element->getRows()) > 0) {
+            $content = '';
+            foreach ($element->getRows() as $row) {
+                if ($row instanceof ElementInterface) {
+                    $content .= $this->renderByHelper($row);
+                } else {
+                    /** @var ElementInterface $el */
+                    foreach ($row as $el) {
+                        $content .= $this->renderByHelper($el);
+                    }
+                }
+            }
+            return $content;
+        }
+
+        $data = $element->getData();
+        return (is_string($data) || is_int($data)) ? $data : '';
+    }
+
+    protected function renderByHelper(ElementInterface $element)
+    {
+        $type = $element->getType();
+        $helperType = 'table' . ucfirst($type);
+        $helper = $this->getView()->plugin($helperType);
+        return $helper->render($element);
+    }
+
+    /**
+     * @param array $attributes
+     * @return string
+     */
     public function createAttributesString(array $attributes)
     {
         $attributes = $this->prepareAttributes($attributes);
@@ -78,6 +120,10 @@ abstract class AbstractHelper extends BaseAbstractHelper
         return implode(' ', $strings);
     }
 
+    /**
+     * @param array $attributes
+     * @return array
+     */
     protected function prepareAttributes(array $attributes)
     {
         foreach ($attributes as $key => $value) {

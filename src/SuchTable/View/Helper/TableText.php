@@ -13,7 +13,7 @@ use SuchTable\Element\Text;
 
 class TableText extends AbstractHelper
 {
-    public function __invoke(Text $element)
+    public function __invoke(Text $element = null)
     {
         if (!$element) {
             return $this;
@@ -24,6 +24,6 @@ class TableText extends AbstractHelper
 
     public function render(Text $element)
     {
-        return $element->getData();
+        return $this->getContent($element);
     }
 }

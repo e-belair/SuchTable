@@ -10,6 +10,7 @@ namespace SuchTable;
 
 
 use SuchTable\Exception\InvalidElementException;
+use Zend\Paginator\Paginator;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Stdlib\PriorityQueue;
 
@@ -120,7 +121,6 @@ class BaseElement implements BaseInterface
         }
 
         $this->options = $options;
-        $this->isPrepared = false;
 
         return $this;
     }
@@ -133,7 +133,6 @@ class BaseElement implements BaseInterface
     public function setOption($option, $value)
     {
         $this->options[$option] = $value;
-        $this->isPrepared = false;
         return $this;
     }
 
@@ -407,7 +406,7 @@ class BaseElement implements BaseInterface
     {
         $this->data = $data;
         $this->isPrepared = false;
-        return $this->prepare();
+        return $this;
     }
 
     /**
@@ -428,61 +427,81 @@ class BaseElement implements BaseInterface
             return $this;
         }
 
-        foreach ($this->getAttributes() as $name => $attribute) {
-            if (is_callable($attribute)) {
-                $this->setAttribute($name, (string) call_user_func($attribute, $this));
-            }
-        }
-
-        foreach ($this->getOptions() as $option => $value) {
-            if (is_callable($value)) {
-                $this->setOption($option, (string) call_user_func($value, $this));
-            }
-        }
-
         $this->rows = [];
         $datas = $this->getData();
-        if (is_array($datas) || $datas instanceof \ArrayAccess) {
-            foreach ($datas as $key => $data) {
+
+        if (is_array($datas) || $datas instanceof \ArrayAccess || $datas instanceof Paginator) {
+            foreach ($datas as $data) {
                 $row = [];
                 /** @var ElementInterface $element */
                 foreach ($this as $element) {
-                    $element = clone($element);
-                    $element->setParent($this);
-                    if ($this instanceof Table) {
-                        $element->setTable($this)->setRowData($data);
-                    } else {
-                        $element->setTable($this->getTable())->setRowData($this->getRowData());
-                    }
-
-                    if (is_object($data)) {
-                        $getter = 'get'.ucfirst(strtolower($element->getName()));
-                        if (method_exists($data, $getter)) {
-                            $element->setData($data->$getter());
-                        } elseif (property_exists($data, $element->getName())) {
-                            $element->setData($data->{$element->getName()});
-                        }
-                    } elseif (is_array($data) && !empty($data[$element->getName()])) {
-                        $element->setData($data[$element->getName()]);
-                    }
-
-                    // Check if element mapped to the content
-                    if ((is_object($element->getData()) || is_array($element->getData())) && $element->count() == 0) {
-                        if ($element->getIterator()->count() == 0) {
-                            throw new InvalidElementException(
-                                sprintf('Missing element for array|object data of element %s', $element->getName())
-                            );
-                        }
-                    }
-
-                    $row[$element->getName()] = $element;
+                    $row[$element->getName()] = $this->cloneElement($element, $data);
                 }
-                $this->rows[] = $row;
+                if ($this->count() > 1) {
+                    $this->rows[] = $row;
+                } else {
+                    $this->rows = $row;
+                }
             }
+        } elseif (is_object($datas)) {
+            // Should have one element only
+            $row = [];
+            /** @var ElementInterface $element */
+            foreach ($this as $element) {
+                $row[$element->getName()] = $this->cloneElement($element, $datas);
+            }
+            $this->rows[] = $row;
         }
 
         $this->isPrepared = true;
         return $this;
+    }
+
+    protected function cloneElement(ElementInterface $element, $data)
+    {
+        $element = clone($element);
+        $element->setParent($this);
+        if ($this instanceof Table) {
+            $element->setTable($this)->setRowData($data);
+        } else {
+            $element->setTable($this->getTable())->setRowData($this->getRowData());
+        }
+
+        if (is_object($data)) {
+            $getter = 'get'.ucfirst(strtolower($element->getName()));
+            if (method_exists($data, $getter)) {
+                $element->setData($data->$getter());
+            } elseif (property_exists($data, $element->getName())) {
+                $element->setData($data->{$element->getName()});
+            }
+        } elseif (is_array($data) && !empty($data[$element->getName()])) {
+            $element->setData($data[$element->getName()]);
+        } elseif (is_string($data)) {
+            $element->setData($data);
+        }
+
+        // Check if element mapped to the content
+        if ((is_object($element->getData()) || is_array($element->getData())) && $element->count() == 0) {
+            if ($element->getIterator()->count() == 0) {
+                throw new InvalidElementException(
+                    sprintf('Missing element for array|object data of element %s', $element->getName())
+                );
+            }
+        }
+
+        foreach ($element->getAttributes() as $name => $attribute) {
+            if (is_callable($attribute)) {
+                $element->setAttribute($name, (string) call_user_func($attribute, $element));
+            }
+        }
+
+        foreach ($element->getOptions() as $option => $value) {
+            if (is_callable($value)) {
+                $element->setOption($option, (string) call_user_func($value, $element));
+            }
+        }
+
+        return $element;
     }
 
     /**

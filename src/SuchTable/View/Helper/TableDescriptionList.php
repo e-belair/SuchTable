@@ -34,24 +34,7 @@ class TableDescriptionList extends AbstractHelper
      */
     public function render(DescriptionList $element)
     {
-        /** @var TableDescriptionTerm $dt */
-        $dt = $this->getView()->plugin('tableDescriptionTerm');
-        /** @var TableDescriptionDesc $dd */
-        $dd = $this->getView()->plugin('tableDescriptionDesc');
-
-        $content = '';
-        foreach ($element->getRows() as $row) {
-            /** @var Element $el */
-            foreach ($row as $el) {
-                if ($el->getType() == 'descriptionTerm') {
-                    $content .= $dt->render($el);
-                } elseif ($el->getType() == 'descriptionDesc') {
-                    $content .= $dd->render($el);
-                }
-            }
-        }
-
-        if ($content) {
+        if ($content = $this->getContent($element)) {
             return sprintf('<dl %s>%s</dl>', $this->createAttributesString($element->getAttributes()), $content);
         }
     }
