@@ -31,7 +31,7 @@ class TableLink extends AbstractHelper
 
     public function render(Link $element)
     {
-        $data = $element->getData();
+        $data = $this->getContent($element);
         $attributes = $element->getAttributes();
         if (isset($attributes['href'])) {
             $href = $attributes['href'];

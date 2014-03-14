@@ -32,10 +32,12 @@ class TableListItem extends AbstractHelper
      */
     public function render(ListItem $element)
     {
-        return sprintf(
-            '<li %s>%s</li>',
-            $this->createAttributesString($element->getAttributes()),
-            $element->getData()
-        );
+        if ($content = $this->getContent($element)) {
+            return sprintf(
+                '<li %s>%s</li>',
+                $this->createAttributesString($element->getAttributes()),
+                $content
+            );
+        }
     }
 }

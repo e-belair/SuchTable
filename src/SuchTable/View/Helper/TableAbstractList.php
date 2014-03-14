@@ -32,17 +32,8 @@ abstract class TableAbstractList extends AbstractHelper
      */
     public function render(AbstractList $element)
     {
-        /** @var TableListItem $li */
-        $li = $this->getView()->plugin('tableListItem');
-        $tag = $element->getType() == 'unorderedList' ? 'ul' : 'ol';
-        $content = '';
-        foreach ($element->getRows() as $row) {
-            foreach ($row as $el) {
-                $content .= $li->render($el);
-            }
-        }
-
-        if ($content) {
+        if ($content = $this->getContent($element)) {
+            $tag = $element->getType() == 'unorderedList' ? 'ul' : 'ol';
             return sprintf(
                 '<%s %s>%s</%s>',
                 $tag,

@@ -32,15 +32,16 @@ class TableDescriptionTerm extends AbstractHelper
      */
     public function render(DescriptionTerm $element)
     {
-        $data = $element->getData();
+        $content = $this->getContent($element);
+
         if ($separator = $element->getOption('separator')) {
-            $data .= $separator;
+            $content .= $separator;
         }
 
         return sprintf(
             '<dt %s>%s</dt>',
             $this->createAttributesString($element->getAttributes()),
-            $data
+            $content
         );
     }
 }
