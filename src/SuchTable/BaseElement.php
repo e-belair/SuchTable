@@ -337,6 +337,10 @@ class BaseElement implements BaseInterface
             $order = $flags['priority'];
         }
 
+        if ($this instanceof Table) {
+            $element->setTable($this);
+        }
+
         $this->iterator->insert($element, $order);
         $this->elements[$name] = $element;
 

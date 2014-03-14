@@ -30,6 +30,12 @@ class Table extends BaseElement implements TableInterface
     protected $paginator;
 
     /**
+     *
+     * @var array
+     */
+    protected $params = array();
+
+    /**
      * @todo custom paginator?
      *
      * @param array|\ArrayAccess|\Traversable|Paginator $data
@@ -72,21 +78,32 @@ class Table extends BaseElement implements TableInterface
     }
 
     /**
-     * @return FormInterface
+     * @return Form
      */
     public function getForm()
     {
+        if ($this->form === null) {
+            $this->setForm(new Form($this));
+        }
         return $this->form;
     }
 
     /**
-     * @param FormInterface $form
+     * @param Form $form
      *
      * @return Table
      */
-    public function setForm(FormInterface $form)
+    public function setForm(Form $form)
     {
         $this->form = $form;
         return $this;
+    }
+
+    /**
+     * @return TableInterface
+     */
+    public function prepare()
+    {
+        return parent::prepare();
     }
 }

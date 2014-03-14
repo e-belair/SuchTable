@@ -28,7 +28,29 @@ class TableHeaderCell extends AbstractHelper
      */
     public function render(ElementInterface $element)
     {
-        return $this->openTag($element) . $element->getLabel() . $this->closeTag();
+        $table = $element->getTable();
+        $form  = $table->getForm();
+
+        $label = $element->getLabel();
+
+        if ($label && $element->getOption('disableOrderBy') !== true) {
+            $onclick = str_replace(
+                array('%FORM_NAME%', '%ORDER_ELEMENT%', '%WAY_ELEMENT%', '%ORDER%', '%WAY%'),
+                array(
+                    $table->getName() . '-form',
+                    $table->getName() . '-params[order]',
+                    $table->getName() . '-params[way]',
+                    $element->getName(),
+                    $form->get($table->getName() . '-params')->get('way')->getValue() == 'ASC' ? 'DESC' : 'ASC'
+                ),
+                "document.forms['%FORM_NAME%'].elements['%ORDER_ELEMENT%'].value = '%ORDER%';" .
+                "document.forms['%FORM_NAME%'].elements['%WAY_ELEMENT%'].value = '%WAY%';" .
+                "document.forms['%FORM_NAME%'].submit(); return false;"
+            );
+            $label = '<a href="javascript:void(0);" onclick="'.$onclick.'">' . $label . '</a>';
+        }
+
+        return $this->openTag($element) . $label . $this->closeTag();
     }
 
     /**
