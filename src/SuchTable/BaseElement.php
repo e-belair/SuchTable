@@ -10,6 +10,7 @@ namespace SuchTable;
 
 
 use SuchTable\Exception\InvalidElementException;
+use Zend\Paginator\Paginator;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Stdlib\PriorityQueue;
 
@@ -120,7 +121,6 @@ class BaseElement implements BaseInterface
         }
 
         $this->options = $options;
-        $this->isPrepared = false;
 
         return $this;
     }
@@ -133,7 +133,6 @@ class BaseElement implements BaseInterface
     public function setOption($option, $value)
     {
         $this->options[$option] = $value;
-        $this->isPrepared = false;
         return $this;
     }
 
@@ -407,7 +406,7 @@ class BaseElement implements BaseInterface
     {
         $this->data = $data;
         $this->isPrepared = false;
-        return $this->prepare();
+        return $this;
     }
 
     /**
@@ -428,22 +427,10 @@ class BaseElement implements BaseInterface
             return $this;
         }
 
-        foreach ($this->getAttributes() as $name => $attribute) {
-            if (is_callable($attribute)) {
-                $this->setAttribute($name, (string) call_user_func($attribute, $this));
-            }
-        }
-
-        foreach ($this->getOptions() as $option => $value) {
-            if (is_callable($value)) {
-                $this->setOption($option, (string) call_user_func($value, $this));
-            }
-        }
-
         $this->rows = [];
         $datas = $this->getData();
 
-        if (is_array($datas) || $datas instanceof \ArrayAccess) {
+        if (is_array($datas) || $datas instanceof \ArrayAccess || $datas instanceof Paginator) {
             foreach ($datas as $data) {
                 $row = [];
                 /** @var ElementInterface $element */
@@ -499,6 +486,18 @@ class BaseElement implements BaseInterface
                 throw new InvalidElementException(
                     sprintf('Missing element for array|object data of element %s', $element->getName())
                 );
+            }
+        }
+
+        foreach ($element->getAttributes() as $name => $attribute) {
+            if (is_callable($attribute)) {
+                $element->setAttribute($name, (string) call_user_func($attribute, $element));
+            }
+        }
+
+        foreach ($element->getOptions() as $option => $value) {
+            if (is_callable($value)) {
+                $element->setOption($option, (string) call_user_func($value, $element));
             }
         }
 
