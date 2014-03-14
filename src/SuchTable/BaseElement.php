@@ -431,15 +431,19 @@ class BaseElement implements BaseInterface
         $datas = $this->getData();
 
         if (is_array($datas) || $datas instanceof \ArrayAccess || $datas instanceof Paginator) {
-            foreach ($datas as $data) {
+            foreach ($datas as $key => $data) {
                 $row = [];
                 /** @var ElementInterface $element */
                 foreach ($this as $element) {
                     $row[$element->getName()] = $this->cloneElement($element, $data);
                 }
-                if ($this->count() > 1) {
+
+                // @todo verify above or improve it ;-)
+                // If collection
+                if (is_int($key)) {
                     $this->rows[] = $row;
                 } else {
+                    // If one to one
                     $this->rows = $row;
                 }
             }
