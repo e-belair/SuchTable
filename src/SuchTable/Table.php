@@ -35,6 +35,8 @@ class Table extends BaseElement implements TableInterface
      */
     protected $params = array();
 
+    protected $allowedParams = array('order', 'way', 'page', 'itemsPerPage');
+
     /**
      * @todo custom paginator?
      *
@@ -105,5 +107,54 @@ class Table extends BaseElement implements TableInterface
     public function prepare()
     {
         return parent::prepare();
+    }
+
+    /**
+     * @param $param
+     *
+     * @return null|string
+     */
+    public function getParam($param)
+    {
+        if (!isset($this->params[$param])) {
+            return null;
+        }
+
+        return $this->params[$param];
+    }
+
+    /**
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return Table
+     */
+    public function setParams(array $params = array())
+    {
+        if (!isset($params[$this->getParamsKey()])) {
+            $params[$this->getParamsKey()] = $params;
+        }
+        $form = $this->getForm();
+        $form->setData($params);
+        if ($form->isValid()) {
+            $this->params = $form->getData()[$this->getParamsKey()];
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParamsKey()
+    {
+        return $this->getName() . '-params';
     }
 }

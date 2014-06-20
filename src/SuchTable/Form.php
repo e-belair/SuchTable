@@ -42,6 +42,11 @@ class Form extends \Zend\Form\Form
             'type' => 'hidden'
         ]);
 
+        $paramsFieldset->add([
+            'name' => 'itemsPerPage',
+            'type' => 'hidden'
+        ]);
+
         $this->add($paramsFieldset);
 
         // Fieldset elements
