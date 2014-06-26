@@ -35,6 +35,9 @@ class Table extends BaseElement implements TableInterface
      */
     protected $params = array();
 
+    /**
+     * @var array
+     */
     protected $allowedParams = array('order', 'way', 'page', 'itemsPerPage');
 
     /**
@@ -143,10 +146,11 @@ class Table extends BaseElement implements TableInterface
         }
         $form = $this->getForm();
         $form->setData($params);
-        if ($form->isValid()) {
-            $this->params = $form->getData()[$this->getParamsKey()];
+        if (!$form->isValid()) {
+            return $this;
         }
 
+        $this->params = $form->getData()[$this->getParamsKey()];
         return $this;
     }
 

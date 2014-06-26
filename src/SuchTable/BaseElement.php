@@ -143,6 +143,7 @@ class BaseElement implements BaseInterface
     {
         return $this->options;
     }
+
     /**
      * @param $option
      * @return mixed|null

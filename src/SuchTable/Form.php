@@ -9,7 +9,8 @@
 namespace SuchTable;
 
 
-use Zend\Form\Fieldset;
+use SuchTable\Fieldset\ElementFieldset;
+use SuchTable\Fieldset\ParamsFieldset;
 
 class Form extends \Zend\Form\Form
 {
@@ -20,49 +21,13 @@ class Form extends \Zend\Form\Form
 
     public function __construct(Table $table, $options = array())
     {
+        $this->table = $table;
+
         $name = $table->getName() . '-form';
         parent::__construct($name, $options);
 
-        $paramsFieldset = new Fieldset($table->getName() . '-params');
-
-        if ($table->getOption('disablePaginationHandler') !== true) {
-            $paramsFieldset->add([
-                'name' => 'page',
-                'type' => 'hidden'
-            ]);
-        }
-
-        $paramsFieldset->add([
-            'name' => 'order',
-            'type' => 'hidden'
-        ]);
-
-        $paramsFieldset->add([
-            'name' => 'way',
-            'type' => 'hidden'
-        ]);
-
-        $paramsFieldset->add([
-            'name' => 'itemsPerPage',
-            'type' => 'hidden'
-        ]);
-
-        $this->add($paramsFieldset);
-
-        // Fieldset elements
-        $elementsFieldset = new Fieldset($table->getName() . '-elements');
-        /** @var Element $element */
-        foreach ($table as $element) {
-            if ($element->getOption('disableForm') !== true) {
-                $elementsFieldset->add([
-                    'name' => $element->getName(),
-                    'type' => 'Text',
-                    'options' => [
-                        'label' => $element->getLabel()
-                    ]
-                ]);
-            }
-        }
+        $this->add(new ParamsFieldset($table));
+        $this->add(new ElementFieldset($table));
 
         $this->add([
             'name' => 'submit-form',

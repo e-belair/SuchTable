@@ -53,6 +53,10 @@ class TableHeaderCell extends AbstractHelper
                 "document.forms['%FORM_NAME%'].elements['%WAY_ELEMENT%'].value = '%WAY%';" .
                 "document.forms['%FORM_NAME%'].submit(); return false;"
             );
+            if ($table->getParam('order') == $element->getName()) {
+                $updown = $way == 'ASC' ?  'down' : 'up';
+                $label .= '&nbsp;<i class="icon-chevron-'.$updown.' glyphicon glyphicon-chevron-'.$updown.'"></i>';
+            }
             $label = '<a href="javascript:void(0);" onclick="'.$onclick.'">' . $label . '</a>';
         }
 
