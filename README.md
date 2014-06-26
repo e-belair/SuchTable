@@ -6,10 +6,6 @@ This module provide tools to generate an Html table from various type of data.
 This module is under development.
 It's work with array or doctrine result.
 
-TODO: pagination
-TODO: Embed order by
-TODO: Embed Search Form
-
 You can help, contact me on IRC #zftalk.dev channel or #zftalk-fr
 
 ## Installation
