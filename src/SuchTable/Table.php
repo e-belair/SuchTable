@@ -30,10 +30,20 @@ class Table extends BaseElement implements TableInterface
     protected $paginator;
 
     /**
-     *
      * @var array
      */
     protected $params = array();
+
+    public function __construct($name = null, $options = array())
+    {
+        parent::__construct($name, $options);
+        // @todo get defaults params from config
+        $this->setParams([
+            'way' => 'ASC',
+            'page' => 1,
+            'itemsPerPage' => 30
+        ]);
+    }
 
     /**
      * @todo custom paginator?
@@ -114,7 +124,11 @@ class Table extends BaseElement implements TableInterface
      */
     public function getParam($param)
     {
-        if (!isset($this->params[$param])) {
+        if (empty($this->params[$param])) {
+            if ($param == 'order') {
+                $this->params['order'] = key($this->elements);
+                return $this->params['order'];
+            }
             return null;
         }
 

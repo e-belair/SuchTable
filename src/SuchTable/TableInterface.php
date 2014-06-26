@@ -16,6 +16,7 @@ interface TableInterface extends BaseInterface
 {
     /**
      * @param Paginator $paginator
+     *
      * @return TableInterface
      */
     public function setPaginator(Paginator $paginator);
@@ -37,6 +38,7 @@ interface TableInterface extends BaseInterface
 
     /**
      * @param Form $form
+     *
      * @return TableInterface
      */
     public function setForm(Form $form);
@@ -57,4 +59,16 @@ interface TableInterface extends BaseInterface
      * @return string
      */
     public function getParam($param);
+
+    /**
+     * @return array
+     */
+    public function getParams();
+
+    /**
+     * @param array $params
+     *
+     * @return TableInterface
+     */
+    public function setParams(array $params = array());
 }
