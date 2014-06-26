@@ -1,0 +1,52 @@
+<?php
+/** @var \SuchTable\Table $table */
+$table = $this->table;
+$onclick = "document.forms['%FORM_NAME%'].elements['employee-list-params[page]'].value = '%PAGE%';" .
+    "document.forms['%FORM_NAME%'].submit(); return false;";
+$onclick = str_replace('%FORM_NAME%', $table->getForm()->getName(), $onclick);
+
+if ($this->pageCount): ?>
+    <div class="pagination pagination-centered" id="<?php echo $table->getName() ?>-paginator">
+        <ul>
+            <!-- Previous page link -->
+            <?php
+            if (isset($this->previous)):
+            ?>
+            <li><a href="javascript:void(0);" onclick="<?php echo str_replace('%PAGE%', $this->previous, $onclick)?>">
+                <?php echo $this->translate('Précédent'); ?>
+            </a></li>
+            <?php else:?>
+            <li class="disabled"><span><?php echo $this->translate('Précédent'); ?></span></li>
+            <?php endif; ?>
+
+            <!-- Numbered page links -->
+            <?php
+            foreach ($this->pagesInRange as $page):
+
+            ?>
+            <?php
+            if ($page != $this->current):
+            ?>
+                <li><a href="javascript:void(0);"
+                       onclick="<?php echo str_replace('%PAGE%', $page, $onclick)?>">
+                    <?php echo $page; ?>
+                </a></li>
+                <?php else: ?>
+                <li class="active"><span><?php echo $page; ?></span></li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+
+            <!-- Next page link -->
+            <?php
+            if (isset($this->next)):
+            ?>
+            <li><a href="javascript:void(0);"
+                   onclick="<?php echo str_replace('%PAGE%', $this->next, $onclick)?>">
+                <?php echo $this->translate('Suivant'); ?>
+            </a></li>
+            <?php else: ?>
+            <li class="disabled"><span><?php echo $this->translate('Suivant'); ?></span></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+<?php endif; ?>
