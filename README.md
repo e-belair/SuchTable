@@ -1,9 +1,7 @@
 # SuchTable
-[![Latest Unstable Version](https://poser.pugx.org/manuscle/such-table/v/unstable.png)](//packagist.org/packages/manuscle/such-table)
+[![Latest Stable Version](https://poser.pugx.org/manuscle/such-table/v/stable.png)](https://packagist.org/packages/manuscle/such-table)
 
 This module provide tools to generate an Html table from various type of data.
-
-This module is under development.
 It's work with array or doctrine result.
 
 You can help, contact me on IRC #zftalk.dev channel or #zftalk-fr
