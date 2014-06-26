@@ -358,6 +358,16 @@ class BaseElement implements BaseInterface
         $this->iterator->insert($element, $order);
         $this->elements[$name] = $element;
 
+        if ($this instanceof TableInterface) {
+            if (true !== $this->getOption('disableForm')
+                && true !== $element->getOption('disableForm')) {
+                $this->getForm()->get($this->getElementsKey())->addTableElement($element);
+                $this->getForm()->getInputFilter()->get($this->getElementsKey())->addTableElement($element);
+            }
+
+            $this->getForm()->getInputFilter()->get($this->getParamsKey())->addTableElement($element);
+        }
+
         return $this;
     }
 
