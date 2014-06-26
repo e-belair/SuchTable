@@ -156,3 +156,43 @@ Then make a query like this:
 
     $table->setData($products);
 ```
+
+## Parameters, pagination and form
+
+The table contain a form to embed the parameters such as search on fields or pagination or order by.
+You can add this code inside the controller to get it working:
+
+```php
+    // Set the defaults
+    $params = [
+        'order' => 'id',
+        'way' => 'ASC',
+        'page' => 1,
+        'itemsPerPage' => 30
+    ];
+    $table->setParams($params);
+    
+    $request = $this->getRequest();
+    if ($request->isPost()) {
+        $table->setParams((array) $request->getPost());
+    }
+    
+    // Update the query
+    $em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+    $qb = $em->createQueryBuilder()
+        ->select('p', 'a')
+        ->from('Application\Entity\Product', 'p')
+        ->leftJoin('p.attributes', 'a')
+        ->orderBy('e.'.$table->getParam('order'), $table->getParam('way'));
+
+    if ($designation = $table->getParam('designation')) {
+        $qb->where($qb->expr()->like('p.designation', $qb->expr()->literal("%{$designation}%")));
+    }
+    
+    $products = new Paginator(new DoctrinePaginator(new \Doctrine\ORM\Tools\Pagination\Paginator($qb)));
+    $products->setCurrentPageNumber($table->getParam('page'));
+    $table->setData($products)
+        ->getPaginator()
+        ->setItemCountPerPage($table->getParam('itemsPerPage'))
+        ->setCurrentPageNumber($table->getParam('page'));
+    ```
