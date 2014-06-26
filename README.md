@@ -195,4 +195,17 @@ You can add this code inside the controller to get it working:
         ->getPaginator()
         ->setItemCountPerPage($table->getParam('itemsPerPage'))
         ->setCurrentPageNumber($table->getParam('page'));
-    ```
+```
+
+Then in the view script:
+
+```php
+echo $this->table($table);
+
+echo $this->paginationControl(
+    $table->getPaginator(),
+    'Sliding',
+    'such-table/paginationcontrol',
+    ['table' => $table]
+);
+```
