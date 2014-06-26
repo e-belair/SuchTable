@@ -56,7 +56,8 @@ class TableHead extends AbstractHelper
             $content = $tr->openTag() . $content . $tr->closeTag();
 
             // Form?
-            if ($table->getOption('headForm') !== false) {
+            if (true !== $table->getOption('disableForm')
+                && false !== $table->getOption('headForm')) {
                 $formContent = '';
                 /** @var ElementFieldset $fieldset */
                 $fieldset = $table->getForm()->get($table->getElementsKey());

@@ -11,6 +11,7 @@ namespace SuchTable;
 
 use SuchTable\Fieldset\ElementFieldset;
 use SuchTable\Fieldset\ParamsFieldset;
+use SuchTable\InputFilter\TableInputFilter;
 
 class Form extends \Zend\Form\Form
 {
@@ -26,6 +27,7 @@ class Form extends \Zend\Form\Form
         $name = $table->getName() . '-form';
         parent::__construct($name, $options);
 
+        $this->setInputFilter(new TableInputFilter($table));
         $this->add(new ParamsFieldset($table));
         $this->add(new ElementFieldset($table));
 

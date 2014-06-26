@@ -13,7 +13,7 @@ use SuchTable\Table;
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;
 
-class ParamsFieldset extends Fieldset implements InputFilterProviderInterface
+class ParamsFieldset extends Fieldset
 {
     /** @var \SuchTable\Table */
     protected $table;
@@ -40,51 +40,9 @@ class ParamsFieldset extends Fieldset implements InputFilterProviderInterface
             'type' => 'hidden'
         ]);
 
-        if ($table->getOption('disablePaginationHandler') !== true) {
-            $this->add([
-                'name' => 'page',
-                'type' => 'hidden'
-            ]);
-        }
-    }
-
-    /**
-     * Should return an array specification compatible with
-     * {@link Zend\InputFilter\Factory::createInputFilter()}.
-     *
-     * @return array
-     */
-    public function getInputFilterSpecification()
-    {
-        $elNames = [];
-        foreach ($this->table->getElements() as $element) {
-            if ($element->getOption('disableOrderBy') !== true) {
-                $elNames[] = $element->getName();
-            }
-        }
-
-        $inputFilter = [
-            'way' => [
-                'required' => true,
-                'validators' => [new \Zend\Validator\InArray(['haystack' => ['ASC', 'DESC']])]
-            ],
-            'order' => [
-                'required' => true,
-                'validators' => [new \Zend\Validator\InArray(['haystack' => $elNames])]
-            ],
-            'itemsPerPage' => [
-                'required' => true,
-                'filters' => [new \Zend\Filter\Int()]
-            ],
-        ];
-
-        if ($this->table->getOption('disablePaginationHandler') !== true) {
-            $inputFilter['page'] = [
-                'required' => true,
-                'filters' => [new \Zend\Filter\Int()]
-            ];
-        }
-
-        return $inputFilter;
+        $this->add([
+            'name' => 'page',
+            'type' => 'hidden'
+        ]);
     }
 }
