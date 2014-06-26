@@ -40,7 +40,7 @@ class TableCell extends AbstractHelper
      * @param ElementInterface $element
      * @return string
      */
-    public function openTag(ElementInterface $element)
+    public function openTag(ElementInterface $element = null)
     {
         return '<td>';
     }

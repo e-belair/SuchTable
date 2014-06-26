@@ -9,7 +9,10 @@
 namespace SuchTable\View\Helper;
 
 
+use SuchTable\Element;
+use SuchTable\Fieldset\ElementFieldset;
 use SuchTable\TableInterface;
+use Zend\Form\View\Helper\FormText;
 
 class TableHead extends AbstractHelper
 {
@@ -38,13 +41,37 @@ class TableHead extends AbstractHelper
         $tr = $this->getView()->plugin('tr');
         /** @var TableHeaderCell $th */
         $th = $this->getView()->plugin('th');
+        /** @var TableCell $td */
+        $td = $this->getView()->plugin('td');
+
+        // @todo use other form element helpers
+        /** @var FormText $formText */
+        $formText = $this->getView()->plugin('formText');
 
         $content = '';
         foreach ($table as $element) {
             $content .= $th->render($element);
         }
         if ($content) {
-            return $this->openTag() . $tr->openTag() . $content . $tr->closeTag() . $this->closeTag();
+            $content = $tr->openTag() . $content . $tr->closeTag();
+
+            // Form?
+            $formContent = '';
+            /** @var ElementFieldset $fieldset */
+            $fieldset = $table->getForm()->get($table->getName() . '-elements');
+            /** @var Element $element */
+            foreach ($table as $element) {
+                $name = $element->getName();
+                $formContent .= $td->openTag();
+                if ($element->getOption('disableForm') !== true && $fieldset->has($name)) {
+                    $formContent .= $formText->__invoke($fieldset->get($name));
+                }
+                $formContent .= $td->closeTag();
+            }
+            if ($formContent) {
+                $content .= $tr->openTag() . $formContent . $tr->closeTag();
+            }
+            return $this->openTag() . $content . $this->closeTag();
         }
     }
 

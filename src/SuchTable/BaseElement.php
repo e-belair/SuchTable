@@ -143,6 +143,7 @@ class BaseElement implements BaseInterface
     {
         return $this->options;
     }
+
     /**
      * @param $option
      * @return mixed|null
@@ -335,6 +336,10 @@ class BaseElement implements BaseInterface
         $order = 0;
         if (array_key_exists('priority', $flags)) {
             $order = $flags['priority'];
+        }
+
+        if ($this instanceof Table) {
+            $element->setTable($this);
         }
 
         $this->iterator->insert($element, $order);
