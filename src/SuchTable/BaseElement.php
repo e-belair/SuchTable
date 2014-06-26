@@ -70,6 +70,11 @@ class BaseElement implements BaseInterface
     protected $rows = array();
 
     /**
+     * @var array
+     */
+    protected $reservedNames = array('order', 'way', 'page', 'itemsPerPage');
+
+    /**
      * @param null $name
      * @param array $options
      */
@@ -333,6 +338,14 @@ class BaseElement implements BaseInterface
             // Rename the element to the specified alias
             $element->setName($name);
         }
+
+        if (in_array($name, $this->reservedNames)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s: element provided has a reserved name',
+                __METHOD__
+            ));
+        }
+
         $order = 0;
         if (array_key_exists('priority', $flags)) {
             $order = $flags['priority'];

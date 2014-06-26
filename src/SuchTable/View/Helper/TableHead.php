@@ -56,21 +56,25 @@ class TableHead extends AbstractHelper
             $content = $tr->openTag() . $content . $tr->closeTag();
 
             // Form?
-            $formContent = '';
-            /** @var ElementFieldset $fieldset */
-            $fieldset = $table->getForm()->get($table->getName() . '-elements');
-            /** @var Element $element */
-            foreach ($table as $element) {
-                $name = $element->getName();
-                $formContent .= $td->openTag();
-                if ($element->getOption('disableForm') !== true && $fieldset->has($name)) {
-                    $formContent .= $formText->__invoke($fieldset->get($name));
+            if ($table->getOption('headForm') !== false) {
+                $formContent = '';
+                /** @var ElementFieldset $fieldset */
+                $fieldset = $table->getForm()->get($table->getElementsKey());
+                $fieldset->prepareElement($table->getForm());
+                /** @var Element $element */
+                foreach ($table as $element) {
+                    $name = $element->getName();
+                    $formContent .= $td->openTag();
+                    if ($element->getOption('disableForm') !== true && $fieldset->has($name)) {
+                        $formContent .= $formText->__invoke($fieldset->get($name));
+                    }
+                    $formContent .= $td->closeTag();
                 }
-                $formContent .= $td->closeTag();
+                if ($formContent) {
+                    $content .= $tr->openTag() . $formContent . $tr->closeTag();
+                }
             }
-            if ($formContent) {
-                $content .= $tr->openTag() . $formContent . $tr->closeTag();
-            }
+
             return $this->openTag() . $content . $this->closeTag();
         }
     }

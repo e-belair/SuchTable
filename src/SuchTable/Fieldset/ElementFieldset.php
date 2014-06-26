@@ -20,8 +20,7 @@ class ElementFieldset extends Fieldset implements InputFilterProviderInterface
     {
         $this->table = $table;
 
-        $name = $table->getName() . '-elements';
-        parent::__construct($name, $options);
+        parent::__construct($table->getElementsKey(), $options);
 
         /** @var Element $element */
         foreach ($this->table as $element) {

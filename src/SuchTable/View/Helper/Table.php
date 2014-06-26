@@ -9,7 +9,9 @@
 namespace SuchTable\View\Helper;
 
 
+use SuchTable\Fieldset\ParamsFieldset;
 use SuchTable\TableInterface;
+use Zend\Form\View\Helper\Form;
 
 class Table extends AbstractHelper
 {
@@ -36,8 +38,21 @@ class Table extends AbstractHelper
         $tbody = $this->getView()->plugin('tbody');
 
         $tableContent = $thead->render($table) . $tbody->render($table);
+        $tableForm = $table->getForm();
+        $tableForm->prepare();
 
-        return $this->openTag($table) . $tableContent . $this->closeTag();
+        /** @var ParamsFieldset $fieldset */
+        $fieldset = $table->getForm()->get($table->getParamsKey());
+        /** @var Form $form */
+        $form = $this->getView()->plugin('form');
+
+        $formContent = $form->openTag($tableForm);
+        $formContent .= $this->getView()->plugin('formSubmit')->__invoke($tableForm->get('submit-form'));
+        foreach ($fieldset->getIterator() as $element) {
+            $formContent .= $this->getView()->plugin('formHidden')->__invoke($element);
+        }
+
+        return $formContent . $this->openTag($table) . $tableContent . $this->closeTag() . $form->closeTag();
     }
 
     /**

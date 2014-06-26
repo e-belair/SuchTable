@@ -41,8 +41,15 @@ interface TableInterface extends BaseInterface
      */
     public function setForm(Form $form);
 
-    /** @return string */
+    /**
+     * @return string
+     */
     public function getParamsKey();
+
+    /**
+     * @return string
+     */
+    public function getElementsKey();
 
     /**
      * @param string $param

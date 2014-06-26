@@ -33,7 +33,8 @@ class Form extends \Zend\Form\Form
             'name' => 'submit-form',
             'type' => 'Submit',
             'attributes' => [
-                'value' => 'ok'
+                'value' => 'ok',
+                'style' => 'width: 0px; height:0px; margin: 0; padding: 0; border: 0;'
             ]
         ]);
     }
