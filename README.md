@@ -26,6 +26,9 @@ return array(
 );
 ```
 
+Go to the example page http://your_web_project/suchTable
+
 ## Example
 
 @see the Wiki pages!
+Or you can see some examples since v1.0.3 inside src/SuchTable/Example folder
