@@ -136,6 +136,19 @@ class Table extends BaseElement implements TableInterface
     }
 
     /**
+     * @param $param
+     * @param $value
+     *
+     * @return Table
+     */
+    public function setParam($param, $value)
+    {
+        $this->params[$param] = $value;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getParams()
