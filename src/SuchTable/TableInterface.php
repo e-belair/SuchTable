@@ -61,6 +61,14 @@ interface TableInterface extends BaseInterface
     public function getParam($param);
 
     /**
+     * @param $param
+     * @param $value
+     *
+     * @return Table
+     */
+    public function setParam($param, $value);
+
+    /**
      * @return array
      */
     public function getParams();

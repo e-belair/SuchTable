@@ -20,6 +20,33 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
         return include __DIR__ . '/../../config/module.config.php';
     }
 
+    public function getServiceConfig()
+    {
+        if (class_exists('DoctrineORMModule\Service\DBALConnectionFactory')) {
+            // For the doctrine examples!
+            return array(
+                'factories' => array(
+                    'doctrine.connection.orm_suchTable' =>
+                        new \DoctrineORMModule\Service\DBALConnectionFactory('orm_suchTable'),
+                    'doctrine.configuration.orm_suchTable' =>
+                        new \DoctrineORMModule\Service\ConfigurationFactory('orm_suchTable'),
+                    'doctrine.entitymanager.orm_suchTable' =>
+                        new \DoctrineORMModule\Service\EntityManagerFactory('orm_suchTable'),
+
+                    'doctrine.driver.orm_suchTable' => new \DoctrineModule\Service\DriverFactory('orm_suchTable'),
+                    'doctrine.eventmanager.orm_suchTable' =>
+                        new \DoctrineModule\Service\EventManagerFactory('orm_suchTable'),
+                    'doctrine.entity_resolver.orm_suchTable' =>
+                        new \DoctrineORMModule\Service\EntityResolverFactory('orm_suchTable'),
+                    'doctrine.sql_logger_collector.orm_suchTable' =>
+                        new \DoctrineORMModule\Service\SQLLoggerCollectorFactory('orm_suchTable')
+                )
+            );
+        }
+
+        return array();
+    }
+
     /**
      * {@inheritDoc}
      */

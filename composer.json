@@ -21,6 +21,7 @@
         "zendframework/zendframework" : "2.*"
     },
     "require-dev" : {
+        "doctrine/doctrine-orm-module": "0.*",
         "phpunit/phpunit" : "*"
     },
     "autoload" : {

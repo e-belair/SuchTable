@@ -1,0 +1,22 @@
+<?php
+/**
+ * Created by EBelair.
+ * User: manu
+ * Date: 27/06/14
+ * Time: 17:12
+ */
+
+/** @var \SuchTable\Table $table */
+$table = $this->table;
+?>
+<h1>Employee List Page <?php echo $table->getParam('page')?></h1>
+<?php
+
+echo $this->table($table);
+
+echo $this->paginationControl(
+    $table->getPaginator(),
+    'Sliding',
+    'such-table/paginationcontrol',
+    ['table' => $table]
+);
