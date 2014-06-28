@@ -2,12 +2,16 @@
 
 return array(
     'modules' => array(
+        'DoctrineModule',
+        'DoctrineORMModule',
         'SuchTable',
     ),
     'module_listener_options' => array(
         'config_glob_paths' => array(
-            __DIR__ . '/testing.config.php',
+            __DIR__ . '/../config/module.config.php',
         ),
-        'module_paths' => array(),
+        'module_paths' => array(
+            __DIR__ . '/../vendor',
+        ),
     ),
 );
