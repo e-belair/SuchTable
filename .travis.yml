@@ -12,7 +12,4 @@ before_script:
  - composer install --prefer-source --dev --no-interaction
 
 script:
-  - vendor/bin/phpunit
-  - php coverage-checker.php clover.xml 95
-
-  
+  - ./vendor/bin/phpunit
