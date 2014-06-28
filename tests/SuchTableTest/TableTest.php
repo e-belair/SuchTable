@@ -17,5 +17,6 @@ class TableTest extends PHPUnit_Framework_TestCase
     {
         $table = new Table();
         $this->assertInstanceOf('SuchTable\TableInterface', $table);
+        $this->assertEquals(1, $table->getParam('page'));
     }
 }
