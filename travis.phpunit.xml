@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<phpunit
+        bootstrap="./tests/Bootstrap.php"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        verbose="true"
+        stopOnFailure="false"
+        processIsolation="false"
+        backupGlobals="false"
+        syntaxCheck="true"
+        >
+    <testsuites>
+        <testsuite name="SuchTable tests">
+            <directory>./tests/SuchTableTest</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+        <log type="coverage-clover" target="./clover.xml"/>
+    </logging>
+</phpunit>
