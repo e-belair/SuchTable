@@ -1,10 +1,13 @@
 {
     "name" : "manuscle/such-table",
-    "description" : "Module description",
+    "description" : "Zend Framework 2 Module for generating HTML tables",
     "type" : "module",
     "license" : "BSD-3-Clause",
     "homepage" : "https://github.com/Manuscle/SuchTable",
     "keywords" : [
+        "table",
+        "html table",
+        "Zend Framework",
         "zf2",
         "module"
     ],
