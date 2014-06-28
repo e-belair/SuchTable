@@ -34,3 +34,6 @@ Go to the example page http://your_web_project/suchTable
 
 @see the Wiki pages!
 Or you can see some examples since v1.0.3 inside src/SuchTable/Example folder
+
+Example of result:
+![Employee list](https://raw.githubusercontent.com/manuscle/SuchTable/master/data/employee-list.png "Example of table generated with joinned table")
