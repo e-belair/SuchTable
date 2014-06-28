@@ -2,6 +2,7 @@
 [![Master Branch Build Status](https://travis-ci.org/manuscle/SuchTable.svg?branch=master)](https://travis-ci.org/manuscle/SuchTable)
 [![Latest Stable Version](https://poser.pugx.org/manuscle/such-table/v/stable.png)](https://packagist.org/packages/manuscle/such-table)
 [![Coverage Status](https://coveralls.io/repos/manuscle/SuchTable/badge.png)](https://coveralls.io/r/manuscle/SuchTable)
+[![Coverage Status](https://img.shields.io/coveralls/manuscle/SuchTable.svg)](https://coveralls.io/r/manuscle/SuchTable)
 [![Latest Unstable Version](https://poser.pugx.org/manuscle/such-table/v/unstable.png)](https://packagist.org/packages/manuscle/such-table)
 
 This module provide tools to generate an Html table from various type of data.
