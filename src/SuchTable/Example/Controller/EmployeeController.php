@@ -36,13 +36,17 @@ class EmployeeController extends AbstractActionController
             ->select('e', 't')
             ->from('SuchTable\Example\Entity\Employees', 'e')
             ->leftJoin('e.titles', 't')
-            //            ->leftJoin('a.attributeGroup', 'at')
             ->orderBy('e.'.$employeeListTable->getParam('order'), $employeeListTable->getParam('way'));
 
+        if ($id = $employeeListTable->getParam('id')) {
+            $qb->where('e.id = :id')->setParameter('id', $id);
+        }
         if ($firstname = $employeeListTable->getParam('firstName')) {
             $qb->where($qb->expr()->like('e.firstName', $qb->expr()->literal("%{$firstname}%")));
         }
-
+        if ($lastname = $employeeListTable->getParam('lastName')) {
+            $qb->where($qb->expr()->like('e.lastName', $qb->expr()->literal("%{$lastname}%")));
+        }
         $employees = new Paginator(new DoctrinePaginator(new \Doctrine\ORM\Tools\Pagination\Paginator($qb)));
         $employees->setCurrentPageNumber($employeeListTable->getParam('page'));
         $employeeListTable->setData($employees)
