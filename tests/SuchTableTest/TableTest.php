@@ -13,10 +13,15 @@ use SuchTable\Table;
 
 class TableTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * Base test, be sure that defaults params are loaded
+     */
     public function testCreateTable()
     {
         $table = new Table();
         $this->assertInstanceOf('SuchTable\TableInterface', $table);
         $this->assertEquals(1, $table->getParam('page'));
+        $this->assertEquals('ASC', $table->getParam('way'));
+        $this->assertEquals(30, $table->getParam('itemsPerPage'));
     }
 }
