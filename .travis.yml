@@ -13,4 +13,4 @@ before_script:
 
 script:
   - ls -la
-  - ./vendor/bin/phpunit -c ./phpunit.xml
+  - ./vendor/bin/phpunit -c ./travis.phpunit.xml
