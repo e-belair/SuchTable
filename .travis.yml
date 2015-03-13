@@ -9,11 +9,11 @@ matrix:
     - php: hhvm
     
 before_script:
- - composer install --prefer-source --dev --no-interaction
+ - composer install --prefer-source --no-interaction
 
 script:
   - mkdir -p build/logs
-  - ./vendor/bin/phpunit -c ./travis.phpunit.xml
+  - ./vendor/bin/phpunit -c travis.phpunit.xml
 
 after_script:
   - php ./vendor/bin/coveralls -v
