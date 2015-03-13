@@ -12,6 +12,8 @@ namespace SuchTable\Example\Table;
 use SuchTable\Element\DescriptionDesc;
 use SuchTable\Element\DescriptionList;
 use SuchTable\Element\DescriptionTerm;
+use SuchTable\Element\Text;
+use SuchTable\Example\Entity\Employees;
 use SuchTable\Table;
 
 class EmployeeListTable extends Table
@@ -42,7 +44,14 @@ class EmployeeListTable extends Table
             'name' => 'lastName',
             'type' => 'SuchTable\Element\Text',
             'options' => [
-                'label' => 'Lastname'
+                'label' => 'Lastname',
+                'innerHtml' => function (Text $element) {
+                    // Retrieve the entire Row Result
+                    /** @var Employees $employees */
+                    $employees = $element->getRowData();
+
+                    return sprintf("<i>%s</i> (%s)", $element->getData(), $employees->getGender());
+                }
             ]
         ]);
 
