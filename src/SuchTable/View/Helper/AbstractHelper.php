@@ -91,7 +91,7 @@ abstract class AbstractHelper extends BaseAbstractHelper
             return $content;
         }
 
-        $data = $element->getData();
+        $data = $element->hasOption('innerHtml') ? $element->getOption('innerHtml') : $element->getData();
         return (is_string($data) || is_int($data)) ? $data : '';
     }
 

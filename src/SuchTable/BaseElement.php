@@ -163,6 +163,15 @@ class BaseElement implements BaseInterface
     }
 
     /**
+     * @param $option
+     * @return bool
+     */
+    public function hasOption($option)
+    {
+        return isset($this->options[$option]);
+    }
+
+    /**
      * @param string $key
      * @param string $value
      * @return BaseInterface

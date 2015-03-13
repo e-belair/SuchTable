@@ -41,6 +41,12 @@ interface BaseInterface extends \Countable, \IteratorAggregate
 
     /**
      * @param $option
+     * @return bool
+     */
+    public  function hasOption($option);
+
+    /**
+     * @param $option
      * @param $value
      * @return mixed
      */
