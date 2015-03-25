@@ -52,6 +52,7 @@ class Factory
      */
     public function create($spec)
     {
+        $spec = $this->validateSpecification($spec, __METHOD__);
         $type = isset($spec['type']) ? $spec['type'] : 'SuchTable\Element';
         $element = $this->getTableElementManager()->get($type);
 
@@ -70,7 +71,7 @@ class Factory
 
     public function configureElement(ElementInterface $element, $spec)
     {
-        $spec = $this->validateSpecification($spec, __METHOD__);
+//        $spec = $this->validateSpecification($spec, __METHOD__);
 
         $name       = isset($spec['name'])       ? $spec['name']       : null;
         $options    = isset($spec['options'])    ? $spec['options']    : null;

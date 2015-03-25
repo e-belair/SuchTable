@@ -45,37 +45,7 @@ interface ElementInterface extends BaseInterface
     public function getLabelAttributes();
 
     /**
-     * @param TableInterface $table
-     * @return ElementInterface
+     * @return string
      */
-    public function setTable(TableInterface $table);
-
-    /**
-     * @return TableInterface
-     */
-    public function getTable();
-
-    /**
-     * @param BaseInterface $parent
-     * @return ElementInterface
-     */
-    public function setParent($parent);
-
-    /**
-     * @return BaseInterface
-     */
-    public function getParent();
-
-    /**
-     * Table RowData
-     *
-     * @param $data
-     * @return ElementInterface
-     */
-    public function setRowData($data);
-
-    /**
-     * @return mixed
-     */
-    public function getRowData();
+    public function getViewHelper();
 }

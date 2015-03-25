@@ -9,6 +9,7 @@
 namespace SuchTable;
 
 
+use SuchTable\Element\DataRow;
 use SuchTable\Exception\InvalidElementException;
 use Zend\Paginator\Paginator;
 use Zend\Stdlib\ArrayUtils;
@@ -20,6 +21,16 @@ class BaseElement implements BaseInterface
      * @var string
      */
     protected $name;
+
+    /**
+     * @var TableInterface
+     */
+    protected $table;
+
+    /**
+     * @var BaseElement
+     */
+    protected $parent;
 
     /**
      * @var array
@@ -307,7 +318,7 @@ class BaseElement implements BaseInterface
     }
 
     /**
-     * @param array|\Traversable|ElementInterface $element
+     * @param array|\Traversable|ElementInterface|BaseInterface $element
      * @param array $flags
      * @return BaseElement
      * @throws Exception\InvalidArgumentException
@@ -315,14 +326,12 @@ class BaseElement implements BaseInterface
     public function add($element, array $flags = array())
     {
         if (is_array($element)
-            || ($element instanceof \Traversable && !$element instanceof ElementInterface)) {
-
-
+            || ($element instanceof \Traversable && !$element instanceof BaseInterface)) {
             $factory = $this->getTableFactory();
             $element = $factory->create($element);
         }
 
-        if (!$element instanceof ElementInterface) {
+        if (!$element instanceof BaseInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s requires that $element be an object implementing %s; received "%s"',
                 __METHOD__,
@@ -360,14 +369,12 @@ class BaseElement implements BaseInterface
             $order = $flags['priority'];
         }
 
-        if ($this instanceof Table) {
-            $element->setTable($this);
-        }
+        $element->setParent($this);
 
         $this->iterator->insert($element, $order);
         $this->elements[$name] = $element;
 
-        if ($this instanceof TableInterface) {
+        if ($this instanceof TableInterface && $element instanceof ElementInterface) {
             if (true !== $this->getOption('disableForm')
                 && true !== $element->getOption('disableForm')) {
                 $this->getForm()->get($this->getElementsKey())->addTableElement($element);
@@ -473,6 +480,7 @@ class BaseElement implements BaseInterface
                 /** @var ElementInterface $element */
                 foreach ($this as $element) {
                     $row[$element->getName()] = $this->cloneElement($element, $data);
+                    $row[$element->getName()]->prepare();
                 }
 
                 // @todo verify above or improve it ;-)
@@ -486,29 +494,32 @@ class BaseElement implements BaseInterface
             }
         } elseif (is_object($datas)) {
             // Should have one element only
-            $row = [];
+            $this->rows = [];
             /** @var ElementInterface $element */
             foreach ($this as $element) {
-                $row[$element->getName()] = $this->cloneElement($element, $datas);
+                $this->rows[$element->getName()] = $this->cloneElement($element, $datas);
+                $this->rows[$element->getName()]->prepare();
             }
-            $this->rows[] = $row;
         }
 
         $this->isPrepared = true;
         return $this;
     }
 
-    protected function cloneElement(ElementInterface $element, $data)
+    /**
+     * @param BaseInterface $element
+     * @param $data
+     *
+     * @return BaseInterface
+     */
+    protected function cloneElement(BaseInterface $element, $data)
     {
         $element = clone($element);
         $element->setParent($this);
-        if ($this instanceof Table) {
-            $element->setTable($this)->setRowData($data);
-        } else {
-            $element->setTable($this->getTable())->setRowData($this->getRowData());
-        }
 
-        if (is_object($data)) {
+        if ($element instanceof DataRow || $element instanceof TableInterface) {
+            $element->setData($data);
+        } elseif (is_object($data)) {
             $getter = 'get'.ucfirst(strtolower($element->getName()));
             if (method_exists($data, $getter)) {
                 $element->setData($data->$getter());
@@ -522,22 +533,22 @@ class BaseElement implements BaseInterface
         }
 
         // Check if element mapped to the content
-        if ((is_object($element->getData()) || is_array($element->getData())) && $element->count() == 0) {
-            if ($element->getIterator()->count() == 0) {
-                throw new InvalidElementException(
-                    sprintf('Missing element for array|object data of element %s', $element->getName())
-                );
-            }
-        }
+//        if ((is_object($element->getData()) || is_array($element->getData())) && $element->count() == 0) {
+//            if ($element->getIterator()->count() == 0) {
+//                throw new InvalidElementException(
+//                    sprintf('Missing element for array|object data of element %s', $element->getName())
+//                );
+//            }
+//        }
 
         foreach ($element->getAttributes() as $name => $attribute) {
-            if (is_callable($attribute)) {
+            if (!is_string($attribute) && is_callable($attribute)) {
                 $element->setAttribute($name, (string) call_user_func($attribute, $element));
             }
         }
 
         foreach ($element->getOptions() as $option => $value) {
-            if (is_callable($value)) {
+            if (!is_string($value) && is_callable($value)) {
                 $element->setOption($option, (string) call_user_func($value, $element));
             }
         }
@@ -555,5 +566,24 @@ class BaseElement implements BaseInterface
         }
 
         return $this->rows;
+    }
+
+    /**
+     * @return BaseElement
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param BaseElement $parent
+     *
+     * @return Element
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+        return $this;
     }
 }

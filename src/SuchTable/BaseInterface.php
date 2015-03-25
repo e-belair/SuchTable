@@ -43,7 +43,7 @@ interface BaseInterface extends \Countable, \IteratorAggregate
      * @param $option
      * @return bool
      */
-    public  function hasOption($option);
+    public function hasOption($option);
 
     /**
      * @param $option
@@ -148,7 +148,7 @@ interface BaseInterface extends \Countable, \IteratorAggregate
     public function getElements();
 
     /**
-     * @return ElementInterface
+     * @return BaseInterface
      * @throws Exception\InvalidElementException
      */
     public function prepare();
@@ -168,4 +168,15 @@ interface BaseInterface extends \Countable, \IteratorAggregate
      * @return array
      */
     public function getRows();
+
+    /**
+     * @param BaseInterface $parent
+     * @return ElementInterface
+     */
+    public function setParent($parent);
+
+    /**
+     * @return BaseInterface
+     */
+    public function getParent();
 }

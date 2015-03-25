@@ -8,7 +8,6 @@
 
 namespace SuchTable\View\Helper;
 
-
 use SuchTable\Element\DescriptionDesc;
 
 class TableDescriptionDesc extends AbstractHelper

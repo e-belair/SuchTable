@@ -8,7 +8,6 @@
 
 namespace SuchTable\Element;
 
-
 use SuchTable\Element;
 
 class Text extends Element

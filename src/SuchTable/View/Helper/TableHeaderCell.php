@@ -10,6 +10,7 @@ namespace SuchTable\View\Helper;
 
 
 use SuchTable\ElementInterface;
+use SuchTable\TableInterface;
 
 class TableHeaderCell extends AbstractHelper
 {
@@ -28,7 +29,11 @@ class TableHeaderCell extends AbstractHelper
      */
     public function render(ElementInterface $element)
     {
-        $table = $element->getTable();
+        /** @var TableInterface $table */
+        $table = $element->getParent() instanceof TableInterface
+            ? $element->getParent()
+            : $element->getParent()->getParent();
+
         $form  = $table->getForm();
 
         $label = $element->getLabel();

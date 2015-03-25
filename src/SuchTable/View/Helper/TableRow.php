@@ -8,12 +8,6 @@
 
 namespace SuchTable\View\Helper;
 
-
-use SuchTable\ElementInterface;
-use SuchTable\Exception\InvalidArgumentException;
-use SuchTable\Exception\InvalidElementException;
-use SuchTable\TableInterface;
-
 class TableRow extends AbstractHelper
 {
     /**
@@ -25,13 +19,12 @@ class TableRow extends AbstractHelper
     }
 
     /**
-     * @todo attributes ?
-     *
+     * @param array $attributes
      * @return string
      */
-    public function openTag()
+    public function openTag(array $attributes = array())
     {
-        return '<tr>';
+        return sprintf('<tr %s>', $this->createAttributesString($attributes));
     }
 
     /**

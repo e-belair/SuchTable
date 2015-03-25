@@ -31,21 +31,6 @@ abstract class Element extends BaseElement implements ElementInterface
     protected $labelAttributes = array();
 
     /**
-     * @var TableInterface
-     */
-    protected $table;
-
-    /**
-     * @var BaseElement
-     */
-    protected $parent;
-
-    /**
-     * @var mixed
-     */
-    protected $rowData;
-
-    /**
      * @param string $key
      * @param string $value
      * @return ElementInterface
@@ -91,25 +76,6 @@ abstract class Element extends BaseElement implements ElementInterface
     }
 
     /**
-     * @param TableInterface $table
-     * @return ElementInterface
-     */
-    public function setTable(TableInterface $table)
-    {
-        $this->table = $table;
-        $this->isPrepared = false;
-        return $this;
-    }
-
-    /**
-     * @return TableInterface
-     */
-    public function getTable()
-    {
-        return $this->table;
-    }
-
-    /**
      * @param mixed $label
      *
      * @return Element
@@ -148,40 +114,10 @@ abstract class Element extends BaseElement implements ElementInterface
     }
 
     /**
-     * @return BaseElement
+     * @return string
      */
-    public function getParent()
+    public function getViewHelper()
     {
-        return $this->parent;
-    }
-
-    /**
-     * @param BaseElement $parent
-     *
-     * @return Element
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-        return $this;
-    }
-
-    /**
-     * Table RowData
-     *
-     * @param $data
-     * @return ElementInterface
-     */
-    public function setRowData($data)
-    {
-        $this->rowData = $data;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRowData()
-    {
-        return $this->rowData;
+        return $this->hasOption('viewHelper') ? $this->getOption('viewHelper') : 'table' . ucfirst($this->getType());
     }
 }

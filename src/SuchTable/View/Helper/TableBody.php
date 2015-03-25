@@ -9,6 +9,8 @@
 namespace SuchTable\View\Helper;
 
 
+use SuchTable\BaseInterface;
+use SuchTable\Element\DataRow;
 use SuchTable\TableInterface;
 
 class TableBody extends AbstractHelper
@@ -34,24 +36,35 @@ class TableBody extends AbstractHelper
      */
     public function render(TableInterface $table)
     {
+        $content = '';
+        foreach ($table->getRows() as $row) {
+            foreach ($row as $dataRow) {
+                $content .= $this->lineContent($dataRow);
+            }
+        }
+
+        if ($content) {
+            return $this->openTag() . $content . $this->closeTag();
+        }
+    }
+
+    /**
+     * @param DataRow $dataRow
+     * @return string
+     */
+    protected function lineContent(DataRow $dataRow)
+    {
         /** @var TableRow $tr */
         $tr = $this->getView()->plugin('tr');
         /** @var TableCell $td */
         $td = $this->getView()->plugin('td');
 
-        $content = '';
-        foreach ($table->getRows() as $row) {
-            $lineContent = '';
-            foreach ($row as $element) {
-                $lineContent .= $td->render($element);
-            }
-            if ($lineContent) {
-                $content .= $tr->openTag() . $lineContent . $tr->closeTag();
-            }
+        $lineContent = '';
+        foreach ($dataRow->getRows() as $el) {
+            $lineContent .= $td->render($el);
         }
-        if ($content) {
-            return $this->openTag() . $content . $this->closeTag();
-        }
+
+        return $tr->openTag($dataRow->getAttributes()) . $lineContent . $tr->closeTag();
     }
 
     /**

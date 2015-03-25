@@ -8,7 +8,6 @@
 
 namespace SuchTable;
 
-
 use Zend\Form\FormInterface;
 use Zend\Paginator\Paginator;
 use Zend\Stdlib\PriorityQueue;

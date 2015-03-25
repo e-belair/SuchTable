@@ -49,7 +49,13 @@ class TableHead extends AbstractHelper
         $formText = $this->getView()->plugin('formText');
 
         $content = '';
-        foreach ($table as $element) {
+        foreach ($table as $key => $element) {
+            if ($element instanceof Element\DataRow && $key === 0) {
+                foreach ($element as $el) {
+                    $content .= $th->render($el);
+                }
+                break;
+            }
             $content .= $th->render($element);
         }
         if ($content) {
