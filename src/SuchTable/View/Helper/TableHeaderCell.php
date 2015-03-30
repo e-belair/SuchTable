@@ -9,12 +9,12 @@
 namespace SuchTable\View\Helper;
 
 
-use SuchTable\ElementInterface;
+use SuchTable\CellInterface;
 use SuchTable\TableInterface;
 
 class TableHeaderCell extends AbstractHelper
 {
-    public function __invoke(ElementInterface $element)
+    public function __invoke(CellInterface $element)
     {
         if (!$element) {
             return $this;
@@ -24,10 +24,10 @@ class TableHeaderCell extends AbstractHelper
     }
 
     /**
-     * @param ElementInterface $element
+     * @param CellInterface $element
      * @return string
      */
-    public function render(ElementInterface $element)
+    public function render(CellInterface $element)
     {
         /** @var TableInterface $table */
         $table = $element->getParent() instanceof TableInterface
@@ -69,10 +69,10 @@ class TableHeaderCell extends AbstractHelper
     }
 
     /**
-     * @param ElementInterface $element
+     * @param CellInterface $element
      * @return string
      */
-    public function openTag(ElementInterface $element)
+    public function openTag(CellInterface $element)
     {
         return sprintf('<th %s>', $this->createAttributesString($element->getLabelAttributes()));
     }

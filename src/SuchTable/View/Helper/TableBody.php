@@ -8,9 +8,7 @@
 
 namespace SuchTable\View\Helper;
 
-
-use SuchTable\BaseInterface;
-use SuchTable\Element\DataRow;
+use SuchTable\TableRow as TableRowElement;
 use SuchTable\TableInterface;
 
 class TableBody extends AbstractHelper
@@ -49,10 +47,10 @@ class TableBody extends AbstractHelper
     }
 
     /**
-     * @param DataRow $dataRow
+     * @param TableRowElement $dataRow
      * @return string
      */
-    protected function lineContent(DataRow $dataRow)
+    protected function lineContent(TableRowElement $dataRow)
     {
         /** @var TableRow $tr */
         $tr = $this->getView()->plugin('tr');

@@ -53,11 +53,11 @@ class Factory
     public function create($spec)
     {
         $spec = $this->validateSpecification($spec, __METHOD__);
-        $type = isset($spec['type']) ? $spec['type'] : 'SuchTable\Element';
+        $type = isset($spec['type']) ? $spec['type'] : 'SuchTable\TableCell';
         $element = $this->getTableElementManager()->get($type);
 
-        if ($element instanceof ElementInterface) {
-            return $this->configureElement($element, $spec);
+        if ($element instanceof CellInterface) {
+            return $this->configureCell($element, $spec);
         }
 
         throw new Exception\DomainException(sprintf(
@@ -69,10 +69,8 @@ class Factory
         ));
     }
 
-    public function configureElement(ElementInterface $element, $spec)
+    public function configureCell(CellInterface $element, $spec)
     {
-//        $spec = $this->validateSpecification($spec, __METHOD__);
-
         $name       = isset($spec['name'])       ? $spec['name']       : null;
         $options    = isset($spec['options'])    ? $spec['options']    : null;
         $attributes = isset($spec['attributes']) ? $spec['attributes'] : null;
@@ -87,6 +85,12 @@ class Factory
 
         if (is_array($attributes) || $attributes instanceof \Traversable || $attributes instanceof \ArrayAccess) {
             $element->setAttributes($attributes);
+        }
+
+        if (isset($spec['elements'])) {
+            foreach ($spec['elements'] as $child) {
+                $element->add($child);
+            }
         }
 
         return $element;

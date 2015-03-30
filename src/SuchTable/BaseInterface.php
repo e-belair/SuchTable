@@ -8,9 +8,19 @@
 
 namespace SuchTable;
 
-
 interface BaseInterface extends \Countable, \IteratorAggregate
 {
+    /**
+     * @param $type
+     * @return mixed
+     */
+    public function setType($type);
+
+    /**
+     * @return string
+     */
+    public function getType();
+
     /**
      * @param $name
      * @return TableInterface
@@ -179,4 +189,9 @@ interface BaseInterface extends \Countable, \IteratorAggregate
      * @return BaseInterface
      */
     public function getParent();
+
+    /**
+     * @return string
+     */
+    public function getViewHelper();
 }

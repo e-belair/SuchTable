@@ -14,6 +14,12 @@ use Zend\Stdlib\PriorityQueue;
 
 class Table extends BaseElement implements TableInterface
 {
+    /**
+     * @see geType()
+     * @var string
+     */
+    protected $type = '';
+
     protected $attributes = array(
         'class' => 'table table-bordered table-striped'
     );

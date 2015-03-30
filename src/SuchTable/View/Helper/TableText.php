@@ -8,12 +8,11 @@
 
 namespace SuchTable\View\Helper;
 
-
-use SuchTable\Element\Text;
+use SuchTable\BaseElement;
 
 class TableText extends AbstractHelper
 {
-    public function __invoke(Text $element = null)
+    public function __invoke(BaseElement $element = null)
     {
         if (!$element) {
             return $this;
@@ -22,7 +21,7 @@ class TableText extends AbstractHelper
         return $this->render($element);
     }
 
-    public function render(Text $element)
+    public function render(BaseElement $element)
     {
         return $this->getContent($element);
     }

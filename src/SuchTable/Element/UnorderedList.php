@@ -8,7 +8,6 @@
 
 namespace SuchTable\Element;
 
-
 class UnorderedList extends AbstractList
 {
     protected $type = 'unorderedList';

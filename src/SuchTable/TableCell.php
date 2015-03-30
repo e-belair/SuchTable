@@ -1,20 +1,15 @@
 <?php
 /**
- * Created by EBelair.
- * User: manu
- * Date: 01/03/14
- * Time: 16:32
+ * Created by PhpStorm.
+ * User: devel
+ * Date: 27/03/15
+ * Time: 16:28
  */
 
 namespace SuchTable;
 
-abstract class Element extends BaseElement implements ElementInterface
+class TableCell extends BaseElement implements CellInterface
 {
-    /**
-     * @var string
-     */
-    protected $type = 'text';
-
     /**
      * TH Content
      *

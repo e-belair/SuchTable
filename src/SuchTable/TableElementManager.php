@@ -57,7 +57,7 @@ class TableElementManager extends AbstractPluginManager
             $plugin->init();
         }
 
-        if ($plugin instanceof ElementInterface) {
+        if ($plugin instanceof BaseInterface) {
             return;
         }
 

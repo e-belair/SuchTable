@@ -12,6 +12,8 @@ namespace SuchTable\View\Helper;
 use SuchTable\Element;
 use SuchTable\Fieldset\ElementFieldset;
 use SuchTable\TableInterface;
+use SuchTable\TableRow As TableRowElement;
+use SuchTable\View\Helper\TableRow;
 use Zend\Form\View\Helper\FormText;
 
 class TableHead extends AbstractHelper
@@ -49,14 +51,14 @@ class TableHead extends AbstractHelper
         $formText = $this->getView()->plugin('formText');
 
         $content = '';
+        $firstRowIsRendered = false;
         foreach ($table as $key => $element) {
-            if ($element instanceof Element\DataRow && $key === 0) {
+            if ($element instanceof TableRowElement && false === $firstRowIsRendered) {
                 foreach ($element as $el) {
                     $content .= $th->render($el);
                 }
-                break;
+                $firstRowIsRendered = true;
             }
-            $content .= $th->render($element);
         }
         if ($content) {
             $content = $tr->openTag() . $content . $tr->closeTag();

@@ -8,7 +8,7 @@
 
 namespace SuchTable;
 
-interface ElementInterface extends BaseInterface
+interface CellInterface extends BaseInterface
 {
     /**
      * @param mixed $label

@@ -8,8 +8,7 @@
 
 namespace SuchTable;
 
-
-use SuchTable\Element\DataRow;
+use SuchTable\TableRow;
 use SuchTable\Exception\InvalidElementException;
 use Zend\Paginator\Paginator;
 use Zend\Stdlib\ArrayUtils;
@@ -17,6 +16,11 @@ use Zend\Stdlib\PriorityQueue;
 
 class BaseElement implements BaseInterface
 {
+    /**
+     * @var string
+     */
+    protected $type;
+
     /**
      * @var string
      */
@@ -50,7 +54,7 @@ class BaseElement implements BaseInterface
     protected $isPrepared = false;
 
     /**
-     * @var array|\Traversable|ElementInterface[]
+     * @var array|\Traversable|ElementInterface[]|BaseInterface[]
      */
     protected $elements = array();
 
@@ -100,6 +104,25 @@ class BaseElement implements BaseInterface
         }
 
         $this->iterator = new PriorityQueue();
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return Element
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -335,7 +358,7 @@ class BaseElement implements BaseInterface
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s requires that $element be an object implementing %s; received "%s"',
                 __METHOD__,
-                __NAMESPACE__ . '\ElementInterface',
+                __NAMESPACE__ . '\BaseInterface',
                 (is_object($element) ? get_class($element) : gettype($element))
             ));
         }
@@ -374,7 +397,7 @@ class BaseElement implements BaseInterface
         $this->iterator->insert($element, $order);
         $this->elements[$name] = $element;
 
-        if ($this instanceof TableInterface && $element instanceof ElementInterface) {
+        if ($this instanceof TableInterface && $element instanceof CellInterface) {
             if (true !== $this->getOption('disableForm')
                 && true !== $element->getOption('disableForm')) {
                 $this->getForm()->get($this->getElementsKey())->addTableElement($element);
@@ -517,13 +540,24 @@ class BaseElement implements BaseInterface
         $element = clone($element);
         $element->setParent($this);
 
-        if ($element instanceof DataRow || $element instanceof TableInterface) {
+        if ($element instanceof TableRow || $element instanceof TableInterface) {
             $element->setData($data);
         } elseif (is_object($data)) {
+            $reflector = new \ReflectionObject($data);
+
             $getter = 'get'.ucfirst(strtolower($element->getName()));
             if (method_exists($data, $getter)) {
                 $element->setData($data->$getter());
-            } elseif (property_exists($data, $element->getName())) {
+            } elseif (property_exists($data, $element->getName())
+                && $reflector->getProperty($element->getName())->isPublic()) {
+                $element->setData($data->{$element->getName()});
+            }
+
+            $getter = 'is'.ucfirst(strtolower($element->getName()));
+            if (method_exists($data, $getter)) {
+                $element->setData($data->$getter());
+            } elseif (property_exists($data, $element->getName())
+                && $reflector->getProperty($element->getName())->isPublic()) {
                 $element->setData($data->{$element->getName()});
             }
         } elseif (is_array($data) && !empty($data[$element->getName()])) {
@@ -585,5 +619,13 @@ class BaseElement implements BaseInterface
     {
         $this->parent = $parent;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getViewHelper()
+    {
+        return $this->hasOption('viewHelper') ? $this->getOption('viewHelper') : 'tableText';
     }
 }

@@ -71,18 +71,18 @@ abstract class AbstractHelper extends BaseAbstractHelper
     /**
      * Recursive render child elements or content of element
      *
-     * @param ElementInterface $element
+     * @param BaseInterface $element
      * @return int|string
      */
-    public function getContent(ElementInterface $element)
+    public function getContent(BaseInterface $element)
     {
         if (count($element->getRows()) > 0) {
             $content = '';
             foreach ($element->getRows() as $row) {
-                if ($row instanceof ElementInterface) {
+                if ($row instanceof BaseInterface) {
                     $content .= $this->renderByHelper($row);
                 } else {
-                    /** @var ElementInterface $el */
+                    /** @var BaseInterface $el */
                     foreach ($row as $el) {
                         $content .= $this->renderByHelper($el);
                     }
@@ -95,11 +95,9 @@ abstract class AbstractHelper extends BaseAbstractHelper
         return (is_string($data) || is_int($data)) ? $data : '';
     }
 
-    protected function renderByHelper(ElementInterface $element)
+    protected function renderByHelper(BaseInterface $element)
     {
-        $type = $element->getType();
-        $helperType = 'table' . ucfirst($type);
-        $helper = $this->getView()->plugin($helperType);
+        $helper = $this->getView()->plugin($element->getViewHelper());
         return $helper->render($element);
     }
 

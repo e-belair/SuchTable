@@ -9,10 +9,13 @@
 namespace SuchTable\View\Helper;
 
 
+use SuchTable\BaseInterface;
 use SuchTable\ElementInterface;
 
 class TableCell extends AbstractHelper
 {
+    protected $validTagAttributes = array('colspan' => true);
+
     public function __invoke(ElementInterface $element)
     {
         if (!$element) {
@@ -25,22 +28,22 @@ class TableCell extends AbstractHelper
     /**
      * @todo recursive render of childs elements
      *
-     * @param ElementInterface $element
+     * @param BaseInterface $element
      * @return string
      */
-    public function render(ElementInterface $element)
+    public function render(BaseInterface $element)
     {
         $helper = $this->getView()->plugin($element->getViewHelper());
-        return $this->openTag($element) . $helper->__invoke($element) . $this->closeTag();
+        return $this->openTag($element->getAttributes()) . $helper->__invoke($element) . $this->closeTag();
     }
 
     /**
-     * @param ElementInterface $element
+     * @param array $attributes
      * @return string
      */
-    public function openTag(ElementInterface $element = null)
+    public function openTag(array $attributes = array())
     {
-        return '<td>';
+        return sprintf('<td %s>', $this->createAttributesString($attributes));
     }
 
     /**
