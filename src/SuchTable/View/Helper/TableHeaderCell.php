@@ -38,7 +38,9 @@ class TableHeaderCell extends AbstractHelper
 
         $label = $element->getLabel();
 
-        if ($label && $element->getOption('disableOrderBy') !== true) {
+        if ($label
+            && $table->getOption('disableOrderBy') !== true
+            && $element->getOption('disableOrderBy') !== true) {
             $way = $element->getName() == $table->getParam('order')
                 // Stay on the same column
                 ? $form->get($table->getParamsKey())->get('way')->getValue() == 'ASC' ? 'DESC' : 'ASC'
