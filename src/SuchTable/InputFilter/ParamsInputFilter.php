@@ -19,7 +19,7 @@ class ParamsInputFilter extends InputFilter
         $this->add([
             'name' => 'page',
             'required' => false,
-            'filters' => [new \Zend\Filter\Int()]
+            'filters' => [new \Zend\Filter\ToInt()]
         ])->add([
             'name' => 'way',
             'required' => true,
@@ -31,7 +31,7 @@ class ParamsInputFilter extends InputFilter
         ])->add([
             'name' => 'itemsPerPage',
             'required' => true,
-            'filters' => [new \Zend\Filter\Int()]
+            'filters' => [new \Zend\Filter\ToInt()]
         ]);
     }
 
