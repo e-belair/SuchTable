@@ -24,7 +24,7 @@
         "zendframework/zendframework" : "2.*"
     },
     "require-dev" : {
-        "doctrine/doctrine-orm-module": "0.*",
+        "doctrine/doctrine-orm-module": "1.*",
         "satooshi/php-coveralls": "dev-master",
         "phpunit/phpunit" : "*"
     },
