@@ -20,7 +20,7 @@
         "process-timeout": 5000
     },
     "require" : {
-        "php" : ">=5.3.3",
+        "php" : ">=5.5",
         "zendframework/zendframework" : "2.*"
     },
     "require-dev" : {
